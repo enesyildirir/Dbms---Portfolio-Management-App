@@ -3,7 +3,7 @@ import pyodbc
 CONN_STR = (
     "Driver={ODBC Driver 17 for SQL Server};"
     "Server=localhost\\SQLEXPRESS;"
-    "Database=vtys1;"
+    "Database=vtys2;"
     "Trusted_Connection=yes;"
 )
 
