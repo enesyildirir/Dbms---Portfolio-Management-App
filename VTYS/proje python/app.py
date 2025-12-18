@@ -44,7 +44,6 @@ def login():
         user_data = None
 
         if user_type == 'investor':
-            # DÜZELTME BURADA: RiskProfilID sorgudan çıkarıldı
             query = """
                 SELECT YatirimciID, Ad, Soyad, Eposta 
                 FROM YatirimcilarTablosu 
@@ -60,11 +59,10 @@ def login():
                     'surname': row.Soyad,
                     'email': row.Eposta,
                     'role': 'investor',
-                    'riskProfileId': 1 # Şimdilik varsayılan bir değer veriyoruz, giriş bozulmasın diye.
+                    'riskProfileId': 1 #varsayılan
                 }
 
         elif user_type == 'broker':
-            # Broker sorgusu aynı kalabilir (Tabii PozisyonID varsa)
             query = """
                 SELECT CalisanID, Ad, Soyad, Eposta, PozisyonID 
                 FROM CalisanlarTablosu 
@@ -107,7 +105,7 @@ def login():
         traceback.print_exc()
         print("--------------------------------------------------")
         return jsonify({'success': False, 'message': f'Sunucu hatası: {str(e)}'}), 500
-# ... login fonksiyonundan sonra ...
+# ... login fonksiyonundan sonra 
 
 
 
@@ -120,13 +118,13 @@ def get_broker_dashboard(broker_id):
     cursor = conn.cursor()
     
     try:
-        # 1. TEMEL İSTATİSTİKLER (Veritabanından Hesapla)
+        # 1. TEMEL İSTATİSTİKLER
         # Toplam Komisyon
         cursor.execute("SELECT SUM(KomisyonMiktar) FROM IslemlerTablosu WHERE CalisanID = ?", (broker_id,))
         row_total = cursor.fetchone()
         total_commission = float(row_total[0]) if row_total[0] else 0
 
-        # Bu Ayki Komisyon (SQL Server Syntax: MONTH(IslemTarihi))
+        # Bu Ayki Komisyon 
         import datetime
         current_month = datetime.datetime.now().month
         current_year = datetime.datetime.now().year
@@ -138,7 +136,7 @@ def get_broker_dashboard(broker_id):
         row_month = cursor.fetchone()
         monthly_commission = float(row_month[0]) if row_month[0] else 0
 
-        # Aktif Müşteri Sayısı (İşlem yapmış benzersiz müşteri sayısı)
+        # Aktif Müşteri Sayısı 
         cursor.execute("SELECT COUNT(DISTINCT HesapNo) FROM IslemlerTablosu WHERE CalisanID = ?", (broker_id,))
         row_active = cursor.fetchone()
         active_clients_count = row_active[0] if row_active[0] else 0
@@ -171,7 +169,7 @@ def get_broker_dashboard(broker_id):
                 'commission': float(row.ToplamKomisyon),
                 'count': row.IslemSayisi
             })
-        # --- 2.1 : SON 5 İŞLEM ---
+        # --- 2.1 
         # Müşteri Adı (Yatirimcilar) ve Varlık Adı (Varliklar) tablolarıyla birleştiriyoruz
         query_recent = """
             SELECT TOP 5
@@ -205,7 +203,6 @@ def get_broker_dashboard(broker_id):
             })
 
         # 3. MÜŞTERİ LİSTESİ VE PORTFÖYLERİ (Önceki kodun aynısı)
-        # 4. MÜŞTERİ LİSTESİ VE PORTFÖYLERİ (GÜNCELLENMİŞ VERSİYON)
         query = """
             SELECT 
                 Y.YatirimciID, Y.Ad, Y.Soyad, Y.Tel, Y.Eposta, 
@@ -248,11 +245,10 @@ def get_broker_dashboard(broker_id):
                 })
 
             if y_id not in clients_map:
-                # Risk Profilini Rastgele veya Sabit Belirle (DB'de yoksa)
-                # Burayı daha zeki hale getiriyoruz:
+                # Risk Profilini Rastgele veya Sabit Belirle 
                 risk_profile = {'name': 'Genel', 'maxStockRatio': 50, 'description': 'Standart yatırımcı profili.'}
                 
-                # Örnek mantık: ID'si tek olanlar Agresif, çift olanlar Dengeli olsun (Demo amaçlı)
+                # Örnek mantık: ID'si tek olanlar Agresif, çift olanlar Dengeli olsun
                 if y_id % 3 == 0:
                     risk_profile = {'name': 'Agresif', 'maxStockRatio': 80, 'description': 'Yüksek getiri hedefli, yüksek risk toleransı.'}
                 elif y_id % 3 == 1:
@@ -269,15 +265,14 @@ def get_broker_dashboard(broker_id):
                     'accounts': []
                 }
             
-            # --- İŞTE EKSİK OLAN KISIM BURASIYDI ---
             # Hesap detaylarına commissionPlan ve minCommission ekliyoruz
             clients_map[y_id]['accounts'].append({
                 'accountId': row.HesapNo,
                 'balance': float(row.Bakiye),
                 'openDate': str(row.HesapAcilisTarihi),
                 'status': row.HesapDurumu,
-                'commissionPlan': 'Standart Plan',  # <-- ARTIK UNDEFINED OLMAYACAK
-                'minCommission': 50,                # <-- ARTIK UNDEFINED OLMAYACAK
+                'commissionPlan': 'Standart Plan',
+                'minCommission': 50,               
                 'holdings': holdings
             })
 
@@ -297,7 +292,6 @@ def get_broker_dashboard(broker_id):
     finally:
         conn.close()
 # İŞLEM OLUŞTURMA API'Sİ
-#********************************
 #--------------------------------------------
 @app.route('/api/transaction/create', methods=['POST'])
 def create_transaction():
@@ -312,7 +306,7 @@ def create_transaction():
         amount = float(data.get('amount'))
         unit_price = float(data.get('price'))
         
-        # --- 1. GÜVENLİK KONTROLÜ: HESAP AKTİF Mİ? ---
+        # --- 1. GÜVENLİK KONTROLÜ: HESAP AKTİF Mİ?
         cursor.execute("SELECT HesapDurumu FROM HesaplarTablosu WHERE HesapNo = ?", (account_id,))
         status_row = cursor.fetchone()
         
@@ -324,31 +318,27 @@ def create_transaction():
              return jsonify({'success': False, 'message': 'HATA: Bu hesap PASİF durumdadır. İşlem yapmak için önce hesabı aktifleştirin.'}), 400
         print(f"--- İŞLEM TALEBİ: {trans_type} - {asset_code} ---")
 
-        # 1. VARLIK ID BULMA (Gelişmiş Eşleştirme)
+        # 1. VARLIK ID BULMA
         varlik_id = None
         
-        # Manuel Harita (Veritabanındaki ID'lerini buraya göre güncellemelisin)
-        # Örn: Senin veritabanında SASA'nın ID'si 9 ise buraya 9 yaz.
+        # Manuel Harita
         asset_map = {
             'THYAO.IS': 1,  'THYAO': 1,
             'USDTRY': 2,    'USD/TRY': 2,
             'GARAN.IS': 6,  'GARAN': 6,
             'AKBNK.IS': 7,  'AKBNK': 7,
             'EREGL.IS': 11, 'EREGL': 11,
-            # Diğer hisselerinin ID'lerini SQL tablonla eşleşecek şekilde buraya ekleyebilirsin
         }
         
         if asset_code in asset_map:
             varlik_id = asset_map[asset_code]
             print(f"Haritadan bulundu: ID {varlik_id}")
         else:
-            # Haritada yoksa Veritabanında Ara
-            # ÖNCE TEMİZLİK YAP: 'SASA.IS' -> 'SASA'
             clean_name = asset_code.replace('.IS', '').replace('TRY=X', 'Dolar')
             
             print(f"Veritabanında aranıyor: {clean_name}")
             
-            # Veritabanında VarlikAdi içinde arıyoruz (Örn: 'Sasa' kelimesi geçiyor mu?)
+            # Veritabanında VarlikAdi içinde arıyoruz 
             cursor.execute("SELECT TOP 1 VarlikID FROM VarliklarTablosu WHERE VarlikAdi LIKE ?", (f"%{clean_name}%",))
             row = cursor.fetchone()
             
@@ -356,7 +346,6 @@ def create_transaction():
                 varlik_id = row[0]
                 print(f"Veritabanından bulundu: ID {varlik_id}")
             else:
-                # KRİTİK DEĞİŞİKLİK: Bulamazsa hata ver, THY (1) yapma!
                 return jsonify({'success': False, 'message': f"HATA: '{asset_code}' veritabanında bulunamadı! Lütfen önce VarliklarTablosu'na ekleyin."}), 400
 
         # 2. HESAP BİLGİLERİNİ ÇEK
@@ -418,7 +407,6 @@ def create_transaction():
         return jsonify({'success': False, 'message': str(e)}), 500
     finally:
         conn.close()
-#********************************************
 
 # PİYASA VERİLERİ ALMA API'Sİ
 # ---------------------------------------------
@@ -428,7 +416,7 @@ def get_market_assets():
     CACHE_FILE = 'market_cache.json' # Verilerin saklanacağı dosya
     CACHE_DURATION = 3600  # Kaç saniye geçerli olsun? (3600 sn = 1 Saat)
 
-    # 1. VARSAYILAN LİSTE (Fallback ve İskelet)
+
     assets_map = {
         'THYAO.IS': {'id': 'THYAO', 'name': 'Türk Hava Yolları', 'type': 'Hisse', 'default_price': 245.50},
         'GARAN.IS': {'id': 'GARAN', 'name': 'Garanti Bankası', 'type': 'Hisse', 'default_price': 38.75},
@@ -543,7 +531,7 @@ def toggle_account_status():
     finally:
         conn.close()
 
-#********************************************
+
 #--------------------------------------------
 # app.py içindeki get_investor_dashboard fonksiyonu:
 
@@ -567,13 +555,13 @@ def get_investor_dashboard(investor_id):
             'email': inv.Eposta
         }
 
-        # 2. RİSK PROFİLİ (ID'ye göre dinamik atama)
+        # 2. RİSK PROFİLİ 
         risk_types = [
             {'name': 'Agresif', 'maxStock': 80, 'desc': 'Yüksek getiri hedefli, yüksek risk toleransı.'},
             {'name': 'Dengeli', 'maxStock': 60, 'desc': 'Orta düzey risk toleransı ile dengeli portföy yapısı.'},
             {'name': 'Muhafazakar', 'maxStock': 30, 'desc': 'Düşük risk, sermaye koruma öncelikli.'}
         ]
-        # ID'ye göre sabit bir profil belirle (Her seferinde değişmemesi için)
+        # ID'ye göre sabit bir profil belirle
         user_risk = risk_types[investor_id % 3]
 
         # 3. SORUMLU BROKER
@@ -614,8 +602,7 @@ def get_investor_dashboard(investor_id):
                 'minCommission': 50
             })
 
-        # 5. İŞLEM GEÇMİŞİ (HEPSİ) - DÜZELTİLMİŞ SORGUSU
-        # VarlikKodu sütunu olmadığı için onu kaldırdık.
+        # 5. İŞLEM GEÇMİŞİ
         cursor.execute("""
             SELECT I.IslemTarihi, V.VarlikAdi, I.IslemTipi, I.Miktar, I.BirimFiyat, I.ToplamTutar, I.KomisyonMiktar, I.HesapNo
             FROM IslemlerTablosu I
@@ -635,7 +622,7 @@ def get_investor_dashboard(investor_id):
 
             transactions_list.append({
                 'date': str(t.IslemTarihi)[0:19],
-                'asset': t.VarlikAdi,        # VarlikKodu yerine VarlikAdi kullanıyoruz
+                'asset': t.VarlikAdi,       
                 'assetName': t.VarlikAdi,
                 'accountId': t.HesapNo,
                 'type': t.IslemTipi,
@@ -660,9 +647,9 @@ def get_investor_dashboard(investor_id):
         return jsonify({'success': False, 'message': str(e)}), 500
     finally:
         conn.close()
-#********************************************
+
 #--------------------------------------------
-# --- BROKER LİSTESİ (Dropdown için) ---
+# --- BROKER LİSTESİ (Dropdown için) 
 @app.route('/api/brokers', methods=['GET'])
 def get_brokers():
     conn = get_db_connection()
@@ -677,9 +664,7 @@ def get_brokers():
     finally:
         conn.close()
 
-# --- YENİ HESAP AÇMA ---
-# --- YENİ HESAP AÇMA (DÜZELTİLMİŞ VERSİYON) ---
-# --- YENİ HESAP AÇMA (GARANTİ YÖNTEM - OUTPUT KULLANIMI) ---
+# --- YENİ HESAP AÇMA 
 @app.route('/api/account/create', methods=['POST'])
 def create_account():
     conn = get_db_connection()
@@ -693,9 +678,6 @@ def create_account():
         from datetime import datetime
         today = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # DÜZELTME: 'OUTPUT INSERTED.HesapNo' komutunu ekledik.
-        # Bu komut, ekleme yaparken oluşan ID'yi anında bize geri fırlatır.
-        # Böylece Python bunu normal bir SELECT sorgusu sanar ve hatasız okur.
         query = """
             INSERT INTO HesaplarTablosu (YatirimciID, CalisanID, Bakiye, HesapAcilisTarihi, HesapDurumu)
             OUTPUT INSERTED.HesapNo
@@ -704,11 +686,10 @@ def create_account():
         
         cursor.execute(query, (investor_id, broker_id, initial_deposit, today))
         
-        # Artık veriyi güvenle alabiliriz
         row = cursor.fetchone()
         
         if row:
-            new_acc_id = row[0] # Yeni oluşan Hesap No
+            new_acc_id = row[0] 
         else:
             new_acc_id = "Bilinmiyor"
             
@@ -722,7 +703,7 @@ def create_account():
         return jsonify({'success': False, 'message': str(e)}), 500
     finally:
         conn.close()
-#********************************************
+
 #--------------------------------------------
 
 if __name__ == '__main__':
