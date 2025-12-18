@@ -1,0 +1,26 @@
+-- 1. Pozisyon Ekleme
+INSERT INTO PozisyonlarTablosu (Pozisyon, Departman) 
+VALUES 
+('Yatırım Danışmanı', 'Satış'),
+('Kıdemli Analist', 'Araştırma'),
+('Operasyon Uzmanı', 'Operasyon');
+
+-- 2. Varlık (Hisse/Döviz vb.) Ekleme
+INSERT INTO VarliklarTablosu (VarlikAdi, VarlikTuru, Piyasa) 
+VALUES 
+('THY (Türk Hava Yolları)', 'Hisse Senedi', 'BIST'),
+('USD/TRY', 'Döviz', 'Forex'),
+('Gram Altın', 'Emtia', 'Emtia Piyasası');
+
+-- 3. Risk Profili Ekleme
+INSERT INTO RiskProfilTablosu (ProfilAdi, Aciklama, MaksIslemOrani) 
+VALUES 
+('Muhafazakar', 'Düşük risk, sabit getiri', 25.00),
+('Dengeli', 'Orta risk, dengeli portföy', 50.00),
+('Agresif', 'Yüksek risk, yüksek getiri hedefi', 100.00);
+
+-- 4. Yatırımcı (Müşteri) Ekleme
+INSERT INTO YatirimcilarTablosu (Ad, Soyad, Tel, TC_no, Eposta, SifreHash, Bakiye) 
+VALUES 
+('Ahmet', 'Yılmaz', '5551112233', '11111111111', 'ahmet@mail.com', 'a1b2c3d4', 50000.00),
+('Zeynep', 'Kaya', '5554445566', '22222222222', 'zeynep@mail.com', 'x9y8z7', 120000.50);
