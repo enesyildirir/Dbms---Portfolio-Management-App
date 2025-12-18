@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yatırım Takip Sistemi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+        .lucide-icon { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+        .modal-backdrop { backdrop-filter: blur(8px); background-color: rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // --- PYTHON VERİLERİ ---
+        const serverPageMode = "{{ page_mode }}";
+        const currentUserData = {{ current_user | tojson | safe if current_user else 'null' }};
+        const serverClients = {{ clients | tojson | safe if clients else '[]' }};
+        const serverTransactions = {{ transactions | tojson | safe if transactions else '[]' }};
+
+        // --- GLOBAL STATE ---
+        const state = {
+            currentUser: currentUserData,
+            currentScreen: serverPageMode === 'dashboard' ? (currentUserData ? currentUserData.role : 'login') : 'login',
+            currentTab: serverPageMode === 'dashboard' && currentUserData.role === 'investor' ? 'accounts' : 'performance',
+            selectedClient: null,
+            detailModalClient: null,
+            searchQuery: '',
+            selectedPeriod: 'month',
+            showSuccess: false,
+            showNewAccountModal: false,
+            newAccountForm: { selectedBroker: '', initialDeposit: '', commissionPlan: 'Standart Plan' },
+            transactionForm: { selectedAccount: '', selectedAsset: '', transactionType: 'ALIS', amount: '', unitPrice: '' },
+            filterState: { selectedAccount: 'all', selectedType: 'all', dateFrom: '', dateTo: '' }
+        };
+
+        const clients = serverClients;
+        const recentTransactions = serverTransactions;
+
+        // --- DİNAMİK BROKER VERİLERİ (Eski static brokerData yerine) ---
+        const brokerData = {
+            name: currentUserData ? currentUserData.name + ' ' + currentUserData.surname : '',
+            position: 'Yatırım Danışmanı',
+            email: currentUserData ? currentUserData.email : '',
+            // İstatistikleri hesapla
+            totalCommission: recentTransactions.reduce((sum, t) => sum + (t.commission || 0), 0),
+            monthlyCommission: recentTransactions.reduce((sum, t) => sum + (t.commission || 0), 0) * 0.8, // Örnek hesap
+            accountCount: clients.reduce((sum, c) => sum + (c.accounts ? c.accounts.length : 0), 0),
+            activeClients: clients.length
+        };
+
+        const assets = [
+            { id: 'THYAO', name: 'Türk Hava Yolları', type: 'Hisse', currentPrice: 245.50 },
+            { id: 'GARAN', name: 'Garanti Bankası', type: 'Hisse', currentPrice: 38.75 },
+            { id: 'AKBNK', name: 'Akbank', type: 'Hisse', currentPrice: 52.30 },
+            { id: 'EREGL', name: 'Ereğli Demir Çelik', type: 'Hisse', currentPrice: 48.90 }
+        ];
+
+        // --- RENDER YARDIMCILARI ---
+        const icons = {
+            trendingUp: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            trendingDown: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>',
+            user: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+            lock: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+            chevronDown: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>',
+            briefcase: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
+            logOut: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>',
+            barChart3: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>',
+            users: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+            plus: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+            dollarSign: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
+            calendar: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
+            activity: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>',
+            arrowUpRight: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>',
+            search: '<svg class="lucide-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            wallet: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>',
+            receipt: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1z"></path><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 17V7"></path></svg>',
+            pieChart: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>'
+        };
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2 }).format(amount);
+        }
+
+        // --- EKRANLAR ---
+
+        function renderLoginScreen() {
+            return `
+                <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+                    <div class="max-w-md w-full">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
+                                ${icons.trendingUp}
+                            </div>
+                            <h1 class="text-3xl font-bold text-gray-900 mb-2">Yatırım Takip Sistemi</h1>
+                            <p class="text-gray-600">Giriş Yapın</p>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                            <form id="loginForm" class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Giriş Tipi</label>
+                                    <div class="relative">
+                                        <select id="userType" class="w-full px-4 py-3 pr-10 bg-gray-50 border border-gray-300 rounded-xl appearance-none focus:ring-2 focus:ring-blue-500 outline-none">
+                                            <option value="broker">Broker / Çalışan</option>
+                                            <option value="investor">Yatırımcı</option>
+                                        </select>
+                                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">${icons.chevronDown}</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">E-posta</label>
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${icons.user}</div>
+                                        <input type="text" id="username" placeholder="ornek@email.com" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Şifre</label>
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${icons.lock}</div>
+                                        <input type="password" id="password" placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">Giriş Yap</button>
+                            </form>
+                            <div class="mt-4 text-xs text-gray-500 text-center">
+                                <p>Broker: mehmet.yildirim@broker.com / broker123</p>
+                                <p>Yatırımcı: ayse.kaya@email.com / investor123</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBrokerInterface() {
+            const tabs = [
+                { id: 'performance', label: 'Genel Bakış', icon: icons.barChart3 },
+                { id: 'clients', label: 'Müşteriler', icon: icons.users },
+                { id: 'transaction', label: 'İşlem', icon: icons.plus }
+            ];
+
+            return `
+                <div class="min-h-screen bg-gray-50">
+                    <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex items-center justify-between h-16">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white">${icons.briefcase}</div>
+                                    <div>
+                                        <h1 class="text-xl font-bold text-gray-900">Broker Paneli</h1>
+                                        <p class="text-sm text-gray-500">${brokerData.name}</p>
+                                    </div>
+                                </div>
+                                <button onclick="logout()" class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">${icons.logOut} Çıkış</button>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="bg-white border-b border-gray-200 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <nav class="flex gap-8">
+                                ${tabs.map(tab => `
+                                    <button onclick="setTab('${tab.id}')" class="flex items-center gap-2 py-4 px-2 border-b-2 transition-colors ${state.currentTab === tab.id ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500'}">
+                                        ${tab.icon} <span class="font-medium">${tab.label}</span>
+                                    </button>
+                                `).join('')}
+                            </nav>
+                        </div>
+                    </div>
+                    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        ${state.currentTab === 'performance' ? renderBrokerPerformance() : ''}
+                        ${state.currentTab === 'clients' ? renderBrokerClients() : ''}
+                        ${state.currentTab === 'transaction' ? renderBrokerTransaction() : ''}
+                    </main>
+                </div>
+            `;
+        }
+
+        function renderBrokerPerformance() {
+            return `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3"><div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">${icons.dollarSign}</div></div>
+                            <p class="text-sm text-gray-600">Toplam Komisyon</p>
+                            <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(brokerData.totalCommission)}</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3"><div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">${icons.calendar}</div></div>
+                            <p class="text-sm text-gray-600">Aylık Tahmini</p>
+                            <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(brokerData.monthlyCommission)}</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3"><div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">${icons.users}</div></div>
+                            <p class="text-sm text-gray-600">Toplam Müşteri</p>
+                            <p class="text-2xl font-bold text-gray-900">${brokerData.activeClients}</p>
+                        </div>
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3"><div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">${icons.activity}</div></div>
+                            <p class="text-sm text-gray-600">Toplam Hesap</p>
+                            <p class="text-2xl font-bold text-gray-900">${brokerData.accountCount}</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200"><h3 class="text-xl font-bold text-gray-900">Son İşlemler</h3></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Tarih</th><th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Müşteri</th><th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Varlık</th><th class="px-6 py-3 text-left text-sm font-medium text-gray-600">İşlem</th><th class="px-6 py-3 text-right text-sm font-medium text-gray-600">Tutar</th></tr></thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    ${recentTransactions.map(t => `
+                                        <tr><td class="px-6 py-4 text-sm text-gray-600">${t.date}</td><td class="px-6 py-4 text-sm font-medium text-gray-900">${t.client}</td><td class="px-6 py-4 text-sm">${t.asset}</td><td class="px-6 py-4 text-sm">${t.type}</td><td class="px-6 py-4 text-right text-sm">₺${formatCurrency(t.total)}</td></tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBrokerClients() {
+            return `
+                <div class="space-y-4">
+                    ${clients.map(client => `
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">${client.name}</h3>
+                                    <p class="text-sm text-gray-600">${client.email}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xl font-bold text-gray-900">${client.accounts.length} Hesap</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <h4 class="font-medium mb-2">Hesaplar:</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    ${client.accounts.map(acc => `
+                                        <div class="bg-gray-50 p-3 rounded text-sm flex justify-between">
+                                            <span>${acc.accountId}</span>
+                                            <span class="font-bold">₺${formatCurrency(acc.balance)}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderBrokerTransaction() {
+            // Dropdown için hesapları düzleştir
+            let flatAccounts = [];
+            clients.forEach(c => {
+                c.accounts.forEach(a => {
+                    flatAccounts.push({ id: a.accountId, name: c.name, balance: a.balance });
+                });
+            });
+
+            return `
+                <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Yeni İşlem Girişi</h3>
+                    <form id="transactionForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Hesap Seçimi</label>
+                            <select id="selectedAccount" class="w-full p-3 border rounded-lg" required>
+                                <option value="">Seçiniz...</option>
+                                ${flatAccounts.map(acc => `<option value="${acc.id}">${acc.name} - ₺${formatCurrency(acc.balance)}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">İşlem Tipi</label>
+                            <div class="flex gap-4">
+                                <button type="button" onclick="setTxType('ALIS')" class="flex-1 py-3 rounded-lg border ${state.transactionForm.transactionType === 'ALIS' ? 'bg-green-50 border-green-500 text-green-700 font-bold' : 'border-gray-300'}">Alış</button>
+                                <button type="button" onclick="setTxType('SATIS')" class="flex-1 py-3 rounded-lg border ${state.transactionForm.transactionType === 'SATIS' ? 'bg-red-50 border-red-500 text-red-700 font-bold' : 'border-gray-300'}">Satış</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Varlık</label>
+                            <select id="selectedAsset" class="w-full p-3 border rounded-lg" required>
+                                <option value="">Seçiniz...</option>
+                                ${assets.map(a => `<option value="${a.id}">${a.name} (${a.id})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Miktar</label><input type="number" id="amount" class="w-full p-3 border rounded-lg" required></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Birim Fiyat</label><input type="number" id="unitPrice" class="w-full p-3 border rounded-lg" required></div>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition-colors">İşlemi Kaydet</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function renderInvestorInterface() {
+            // Yatırımcı sadece kendi verisini görür
+            const myData = clients[0]; 
+            const myAccounts = myData ? myData.accounts : [];
+
+            return `
+                <div class="min-h-screen bg-gray-50">
+                    <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex items-center justify-between h-16">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white">${icons.wallet}</div>
+                                    <div><h1 class="text-xl font-bold text-gray-900">Yatırımcı Paneli</h1><p class="text-sm text-gray-500">Hoşgeldiniz, ${currentUserData.name}</p></div>
+                                </div>
+                                <button onclick="logout()" class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">${icons.logOut} Çıkış</button>
+                            </div>
+                        </div>
+                    </header>
+                    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <div class="space-y-6">
+                            <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+                                <p class="text-blue-100 mb-2">Toplam Varlık</p>
+                                <h2 class="text-4xl font-bold text-white mb-6">₺${formatCurrency(myAccounts.reduce((sum, a) => sum + a.balance, 0))}</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4"><p class="text-blue-100 text-sm">Hesap Sayısı</p><p class="text-xl font-bold">${myAccounts.length}</p></div>
+                                    <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4"><p class="text-blue-100 text-sm">Broker</p><p class="text-xl font-bold">${myData && myData.broker ? myData.broker.name : 'Atanmadı'}</p></div>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">Hesaplarım</h3>
+                            <div class="space-y-4">
+                                ${myAccounts.map(acc => `
+                                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                        <div class="flex justify-between">
+                                            <div class="flex gap-4">
+                                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">${icons.creditCard}</div>
+                                                <div><h4 class="text-lg font-bold">${acc.accountId}</h4><p class="text-sm text-gray-600">Yatırım Hesabı</p></div>
+                                            </div>
+                                            <div class="text-right"><p class="text-sm text-gray-600">Bakiye</p><p class="text-2xl font-bold">₺${formatCurrency(acc.balance)}</p></div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900">İşlem Geçmişim</h3>
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-sm text-gray-600">Tarih</th><th class="px-6 py-3 text-left text-sm text-gray-600">Varlık</th><th class="px-6 py-3 text-left text-sm text-gray-600">İşlem</th><th class="px-6 py-3 text-right text-sm text-gray-600">Tutar</th></tr></thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        ${recentTransactions.map(t => `
+                                            <tr><td class="px-6 py-4 text-sm text-gray-600">${t.date}</td><td class="px-6 py-4 text-sm font-medium">${t.asset}</td><td class="px-6 py-4 text-sm">${t.type}</td><td class="px-6 py-4 text-right text-sm">₺${formatCurrency(t.total)}</td></tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            `;
+        }
+
+        // --- JS LOGIC ---
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('userType').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = "/";
+                } else {
+                    alert(data.message || 'Giriş başarısız!');
+                }
+            } catch (error) {
+                alert('Sunucu hatası!');
+            }
+        }
+
+        function logout() { window.location.href = "/logout"; }
+        function setTab(id) { state.currentTab = id; render(); }
+        function setTxType(type) { state.transactionForm.transactionType = type; render(); }
+
+        async function handleTransactionSubmit(e) {
+            e.preventDefault();
+            const formData = {
+                accountId: document.getElementById('selectedAccount').value,
+                assetId: document.getElementById('selectedAsset').value,
+                type: state.transactionForm.transactionType,
+                amount: document.getElementById('amount').value,
+                price: document.getElementById('unitPrice').value
+            };
+            try {
+                const response = await fetch('/add_transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const res = await response.json();
+                if (res.success) { alert('İşlem Başarılı!'); window.location.reload(); }
+                else { alert('Hata: ' + res.message); }
+            } catch { alert('Sunucu hatası'); }
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            if (state.currentScreen === 'login') {
+                app.innerHTML = renderLoginScreen();
+                document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            } else if (state.currentScreen === 'broker') {
+                app.innerHTML = renderBrokerInterface();
+                if (state.currentTab === 'transaction') {
+                    const form = document.getElementById('transactionForm');
+                    if (form) form.addEventListener('submit', handleTransactionSubmit);
+                }
+            } else if (state.currentScreen === 'investor') {
+                app.innerHTML = renderInvestorInterface();
+            }
+        }
+
+        render();
+    </script>
+</body>
+</html>

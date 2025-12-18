@@ -1,0 +1,16 @@
+-- 7. Hesap Açma
+-- VarlikID:1, KomisyonID:1, YatirimciID:1, CalisanID:1, RiskProfilID:2 (Dengeli)
+INSERT INTO HesaplarTablosu (HesapAcilisTarihi, Bakiye, HesapDurumu, VarlikID, KomisyonID, YatirimciID, CalisanID, RiskProfilID) 
+VALUES 
+(GETDATE(), 100000.00, 'Aktif', 1, 1, 1, 1, 2),
+(GETDATE(), 250000.00, 'Aktif', 2, 2, 2, 2, 3);
+
+-- 8. İşlem (Alım/Satım) Girişi
+-- HesapNo: 1 numaralı hesaba işlem yapılıyor.
+INSERT INTO IslemlerTablosu (IslemTipi, IslemTarihi, Miktar, BirimFiyat, KomisyonMiktar, ToplamTutar, KarZarar, CalisanID, HesapNo, VarlikID) 
+VALUES 
+-- İşlem 1: 100 adet THY hissesi alımı
+('Alış', GETDATE(), 100, 250.50, 25.00, 25075.00, 0, 1, 1, 1),
+
+-- İşlem 2: 50 adet THY hissesi satımı (Varsayılan kâr örneği ile)
+('Satış', GETDATE(), 50, 260.00, 15.00, 13000.00, 475.00, 1, 1, 1);

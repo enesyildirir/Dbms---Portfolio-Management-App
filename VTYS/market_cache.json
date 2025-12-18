@@ -1,0 +1,74 @@
+[
+    {
+        "id": "THYAO",
+        "name": "Türk Hava Yolları",
+        "type": "Hisse",
+        "currentPrice": 245.5
+    },
+    {
+        "id": "GARAN",
+        "name": "Garanti Bankası",
+        "type": "Hisse",
+        "currentPrice": 38.75
+    },
+    {
+        "id": "AKBNK",
+        "name": "Akbank",
+        "type": "Hisse",
+        "currentPrice": 52.3
+    },
+    {
+        "id": "EREGL",
+        "name": "Ereğli Demir Çelik",
+        "type": "Hisse",
+        "currentPrice": 48.9
+    },
+    {
+        "id": "KCHOL",
+        "name": "Koç Holding",
+        "type": "Hisse",
+        "currentPrice": 156.2
+    },
+    {
+        "id": "SAHOL",
+        "name": "Sabancı Holding",
+        "type": "Hisse",
+        "currentPrice": 78.4
+    },
+    {
+        "id": "PETKM",
+        "name": "Petkim",
+        "type": "Hisse",
+        "currentPrice": 34.6
+    },
+    {
+        "id": "TUPRS",
+        "name": "Tüpraş",
+        "type": "Hisse",
+        "currentPrice": 189.3
+    },
+    {
+        "id": "ASELS",
+        "name": "Aselsan",
+        "type": "Hisse",
+        "currentPrice": 65.4
+    },
+    {
+        "id": "BIMAS",
+        "name": "BİM Mağazalar",
+        "type": "Hisse",
+        "currentPrice": 485.0
+    },
+    {
+        "id": "SASA",
+        "name": "Sasa Polyester",
+        "type": "Hisse",
+        "currentPrice": 42.1
+    },
+    {
+        "id": "USDTRY",
+        "name": "Dolar/TL",
+        "type": "Döviz",
+        "currentPrice": 42.73
+    }
+]

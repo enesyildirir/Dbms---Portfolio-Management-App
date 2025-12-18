@@ -1,0 +1,11 @@
+-- 5. Çalışan Ekleme (PozisyonID: 1 -> Yatırım Danışmanı olduğunu varsayıyoruz)
+INSERT INTO CalisanlarTablosu (Ad, Soyad, Tel, TC_no, Eposta, IseGirisTarihi, SifreHash, Durum, PozisyonID) 
+VALUES 
+('Mehmet', 'Demir', '5321112233', '33333333333', 'mehmet@firma.com', '2023-01-15', 'sifre123', 1, 1),
+('Elif', 'Şahin', '5324445566', '44444444444', 'elif@firma.com', '2023-05-20', 'sifre456', 1, 2);
+
+-- 6. Komisyon Tanımlama (VarlikID: 1 -> THY, CalisanID: 1 -> Mehmet)
+INSERT INTO KomisyonlarTablosu (MinimumKomisyon, VarlikID, CalisanID) 
+VALUES 
+(15.00, 1, 1), -- THY işlemleri için Mehmet beyin min. komisyonu
+(10.00, 2, 2); -- USD işlemleri için Elif hanımın min. komisyonu

@@ -1,0 +1,3801 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>861</width>
+    <height>712</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f0f4f8; /* Görseldeki açık mavi/gri ton */</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QStackedWidget" name="StackWidget">
+      <property name="minimumSize">
+       <size>
+        <width>750</width>
+        <height>500</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>3</number>
+      </property>
+      <widget class="QWidget" name="LoginPage">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QLabel" name="Logo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #f0f4f8; /* Görseldeki açık mavi/gri ton */</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>../../QT projects/VTYS/proje adımlar/Ekran görüntüsü 2025-12-08 131220.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
+         <widget class="QLabel" name="Baslik">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="palette">
+           <palette>
+            <active>
+             <colorrole role="WindowText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Button">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Text">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="ButtonText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="PlaceholderText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="128">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </active>
+            <inactive>
+             <colorrole role="WindowText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Button">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Text">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="ButtonText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="PlaceholderText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="128">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </inactive>
+            <disabled>
+             <colorrole role="WindowText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Button">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Text">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="ButtonText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>240</red>
+                <green>244</green>
+                <blue>248</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="PlaceholderText">
+              <brush brushstyle="SolidPattern">
+               <color alpha="128">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </disabled>
+           </palette>
+          </property>
+          <property name="font">
+           <font>
+            <family>Bodoni MT</family>
+            <pointsize>14</pointsize>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 700 14pt &quot;Bodoni MT&quot;;
+color: rgb(0, 0, 0);
+</string>
+          </property>
+          <property name="text">
+           <string>                         Yatırım Takip Sistemi</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::TextFormat::AutoText</enum>
+          </property>
+          <property name="scaledContents">
+           <bool>false</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>35</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignHCenter">
+         <widget class="QFrame" name="GirisFrame">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>350</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>900</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QFrame {
+    background-color: white;
+    border-radius: 15px; /* Köşeleri yuvarlatır */
+    border: 1px solid #e0e0e0;
+}
+</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color:rgb(0, 0, 0);
+border: transparent</string>
+             </property>
+             <property name="text">
+              <string>Giriş Tipi</string>
+             </property>
+             <property name="wordWrap">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBox">
+             <property name="styleSheet">
+              <string notr="true">QComboBox {
+   border: 1px solid #ccc;
+
+
+    border-radius: 8px;
+    padding: 5px;
+    color: #333333; /* Yazı rengini KOYU GRİ/SİYAH yapar */
+    background-color: #ffffff; /* Arka planı BEYAZ yapar */
+}
+/* Açılan listenin kendisi */
+QComboBox QAbstractItemView {
+    color: #333333; /* Liste elemanlarının yazı rengi */
+    background-color: #ffffff; /* Liste arka planı */
+    selection-background-color: #2b5cff; /* Üzerine gelince mavi olsun */
+    selection-color: white; /* Seçili olanın yazısı beyaz olsun */
+}</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>Yatırımcı Hesabı</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Broker Hesabı</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Yeni Üye Kaydı</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0,0,0);
+border:transparent
+</string>
+             </property>
+             <property name="text">
+              <string>Kullanıcı Adınız</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="styleSheet">
+              <string notr="true">QLineEdit {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f9f9f9; /* Hafif gri arka plan */
+    color: #333333; /* Yazı rengini KOYU GRİ/SİYAH yapar - ÇÖZÜM BU SATIRDA */
+}
+
+QLineEdit:focus {
+    border: 2px solid #2b5cff;
+    background-color: #ffffff; /* Tıklayınca arka plan tam beyaz olsun */
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="placeholderText">
+              <string>kullanici.Adi</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0,0,0);
+border:transparent
+</string>
+             </property>
+             <property name="text">
+              <string>Kullanıcı Şifreniz</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_2">
+             <property name="styleSheet">
+              <string notr="true">QLineEdit {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #f9f9f9; /* Hafif gri arka plan */
+    color: #333333; /* Yazı rengini KOYU GRİ/SİYAH yapar - ÇÖZÜM BU SATIRDA */
+}
+
+QLineEdit:focus {
+    border: 2px solid #2b5cff;
+    background-color: #ffffff; /* Tıklayınca arka plan tam beyaz olsun */
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="echoMode">
+              <enum>QLineEdit::EchoMode::Password</enum>
+             </property>
+             <property name="placeholderText">
+              <string>kullanici.sifre</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+    background-color: #2b5cff; /* O parlak mavi renk */
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 14px;
+}
+QPushButton:hover {
+    background-color: #1a45d0; /* Üzerine gelince koyulaşsın */
+}</string>
+             </property>
+             <property name="text">
+              <string>Giriş Yap</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="investorPage">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QScrollArea" name="scrollArea">
+            <property name="minimumSize">
+             <size>
+              <width>795</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">scrollArea {
+    background-color: transparent; /* Kendisi şeffaf olsun */
+    border: none;
+}</string>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>811</width>
+               <height>918</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="QWidget" name="widget_2" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
+                <widget class="QLabel" name="label_4">
+                 <property name="geometry">
+                  <rect>
+                   <x>30</x>
+                   <y>10</y>
+                   <width>49</width>
+                   <height>16</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="label_5">
+                 <property name="geometry">
+                  <rect>
+                   <x>20</x>
+                   <y>10</y>
+                   <width>91</width>
+                   <height>71</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="pixmap">
+                  <pixmap>../../QT projects/VTYS/proje adımlar/Ekran görüntüsü 2025-12-08 152749.png</pixmap>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="KullaniciAdiLabel">
+                 <property name="geometry">
+                  <rect>
+                   <x>120</x>
+                   <y>50</y>
+                   <width>91</width>
+                   <height>16</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0,0,0)
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Kullanıcı adı</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="YatirimciPaneliLabel">
+                 <property name="geometry">
+                  <rect>
+                   <x>100</x>
+                   <y>20</y>
+                   <width>141</width>
+                   <height>16</height>
+                  </rect>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color : rgb(150,150,150)
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Yatırımcı Paneli</string>
+                 </property>
+                </widget>
+                <widget class="QPushButton" name="ExitButton">
+                 <property name="geometry">
+                  <rect>
+                   <x>660</x>
+                   <y>25</y>
+                   <width>131</width>
+                   <height>31</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0,0,0)
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Çıkış</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../../QT projects/VTYS/proje adımlar/logout.png</normaloff>../../QT projects/VTYS/proje adımlar/logout.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>24</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="SekmeGecisFrame">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>90</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">/* 1. ÜÇ BUTON İÇİN ORTAK TEMEL AYARLAR */
+QPushButton#HesaplarimveBakiyeButon,
+QPushButton#IslemGecmisiButon,
+QPushButton#PortfoyDurumuButon {
+    border: none;
+	background:none;
+    background-color: transparent; /* Normal halde şeffaf */
+    color: rgb(129, 129, 129);
+	text-color:rgb(0,0,0);
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 3px solid transparent;
+    text-align: left;
+}
+
+/* 2. MOUSE ÜZERİNE GELİNCE (HOVER) */
+QPushButton#HesaplarimveBakiyeButon:hover,
+QPushButton#IslemGecmisiButon:hover,
+QPushButton#PortfoyDurumuButon:hover {
+    color: #101828;
+    background-color: transparent; /* Hover'da da arka plan gelmesin */
+}
+
+/* 3. BUTONA BASILI TUTULDUĞUNDA (PRESSED) - Sorunu Çözen Kısım */
+QPushButton#HesaplarimveBakiyeButon:pressed,
+QPushButton#IslemGecmisiButon:pressed,
+QPushButton#PortfoyDurumuButon:pressed {
+    background-color: transparent; /* Basınca mavi kutu çıkmasını engeller */
+}
+
+/* 4. BUTON SEÇİLİ OLDUĞUNDA (CHECKED) - Sorunu Çözen Kısım */
+QPushButton#HesaplarimveBakiyeButon:checked,
+QPushButton#IslemGecmisiButon:checked,
+QPushButton#PortfoyDurumuButon:checked {
+    color: #2b5cff;
+    border-bottom: 3px solid #2b5cff;
+    background-color: transparent; /* Seçiliyken arka planı şeffaf zorla */
+}</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QPushButton" name="HesaplarimveBakiyeButon">
+                   <property name="layoutDirection">
+                    <enum>Qt::LayoutDirection::LeftToRight</enum>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="text">
+                    <string>Hesaplarım ve Bakiye</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="IslemGecmisiButon">
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="text">
+                    <string>İşlem Geçmişi</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="PortfoyDurumuButon">
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="text">
+                    <string>Portföy Durumu</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="infoOfInvestor">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>125</height>
+                 </size>
+                </property>
+                <property name="whatsThis">
+                 <string extracomment="Yatırımcı hakkında genel bilgiler"/>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">/* Ana Mavi Kart */
+QFrame#infoOfInvestor {
+    /* Soldan sağa modern mavi gradient */
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #2563eb, stop:1 #4f46e5);
+
+    border-radius: 20px;
+    color: white;
+}
+
+/* İçindeki Başlık Yazıları (Örn: &quot;Toplam Bakiye&quot;) */
+QLabel#toplambakiye{
+    color: #e0e7ff; /* Hafif soluk beyaz */
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* İçindeki Değerler (Örn: &quot;₺850.000&quot;) */
+QLabel#toplambakiye1 {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 24px;
+}</string>
+                </property>
+                <widget class="QLabel" name="toplambakiye">
+                 <property name="geometry">
+                  <rect>
+                   <x>30</x>
+                   <y>10</y>
+                   <width>91</width>
+                   <height>16</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent; </string>
+                 </property>
+                 <property name="text">
+                  <string>Toplam Bakiye</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="toplambakiye1">
+                 <property name="geometry">
+                  <rect>
+                   <x>30</x>
+                   <y>30</y>
+                   <width>131</width>
+                   <height>21</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent; </string>
+                 </property>
+                 <property name="text">
+                  <string>825.000₺</string>
+                 </property>
+                </widget>
+                <widget class="QFrame" name="RiskProfiliFrame">
+                 <property name="geometry">
+                  <rect>
+                   <x>250</x>
+                   <y>60</y>
+                   <width>219</width>
+                   <height>49</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QFrame#RiskProfiliFrame {
+    background-color: rgba(255, 255, 255, 0.15); /* %15 Görünürlükte Beyaz (Cam Efekti) */
+    border-radius: 10px;
+}
+QLabel#riskprofili{
+    background-color: transparent; /* Yazıların arkası şeffaf kalsın */
+    color: white;
+}
+QLabel#riskprofili1{
+    background-color: transparent; /* Yazıların arkası şeffaf kalsın */
+    color: white;
+}</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="riskprofili">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>2</y>
+                    <width>81</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Risk Profili</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="riskprofili1">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>28</y>
+                    <width>81</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Dengeli</string>
+                  </property>
+                 </widget>
+                </widget>
+                <widget class="QFrame" name="BrokerinfoFrame">
+                 <property name="geometry">
+                  <rect>
+                   <x>480</x>
+                   <y>60</y>
+                   <width>219</width>
+                   <height>49</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QFrame#BrokerinfoFrame {
+    background-color: rgba(255, 255, 255, 0.15); /* %15 Görünürlükte Beyaz (Cam Efekti) */
+    border-radius: 10px;
+}
+QLabel#sorumlubroker{
+    background-color: transparent; /* Yazıların arkası şeffaf kalsın */
+    color: white;
+}
+QLabel#sorumlubroker1{
+    background-color: transparent; /* Yazıların arkası şeffaf kalsın */
+    color: white;
+}</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="sorumlubroker">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>2</y>
+                    <width>91</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Sorumlu Broker</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="sorumlubroker1">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>28</y>
+                    <width>101</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Mehmet</string>
+                  </property>
+                 </widget>
+                </widget>
+                <widget class="QFrame" name="HesapSayisiFrame">
+                 <property name="geometry">
+                  <rect>
+                   <x>20</x>
+                   <y>60</y>
+                   <width>219</width>
+                   <height>49</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QFrame#HesapSayisiFrame {
+    background-color: rgba(255, 255, 255, 0.15); /* %15 Görünürlükte Beyaz (Cam Efekti) */
+    border-radius: 10px;
+}
+QLabel#HesapSayisi{
+    background-color: transparent; /* Yazıların arkası şeffaf kalsın */
+    color: white;
+}
+QLabel#HesapSayisi1{
+    background-color: transparent; /* Yazıların arkası şeffaf kalsın */
+    color: white;
+}</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="HesapSayisi">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>0</y>
+                    <width>91</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Hesap Sayısı</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="HesapSayisi1">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>28</y>
+                    <width>101</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                 </widget>
+                </widget>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="HesaplarimInfo">
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color:rgb(0,0,0)
+
+</string>
+                </property>
+                <property name="text">
+                 <string>Hesaplarım</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="HesaplarimInfoFrame">
+                <property name="styleSheet">
+                 <string notr="true">/* ANA KART (Beyaz alan) */
+QFrame#HaplarimInfoFrame {
+    background-color: #ffffff;
+    border: 1px solid #eaecf0;
+    border-radius: 16px;
+}
+
+/* Üst ikon alanı */
+QFrame#IconFrame {
+    background-color: #eef4ff;
+    border-radius: 12px;
+}
+
+/* GENEL YAZI AYARI */
+QLabel {
+    background: transparent;
+    color: #101828;
+    font-family: &quot;Segoe UI&quot;, sans-serif;
+}
+
+/* Hesap No */
+QLabel#HesapNoLabel1 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Yatırım Hesabı alt yazı */
+QLabel#YatirimHesabiLabel {
+    font-size: 13px;
+    color: #667085;
+}
+
+/* Sağdaki Bakiye Başlığı */
+QLabel#BakiyeBaslikLabel {
+    font-size: 12px;
+    color: #667085;
+}
+
+/* Sağdaki Bakiye Değeri */
+QLabel#BakiyeLabel1 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #101828;
+}
+
+/* ÜÇ ALT KART (Açılış Tarihi, Komisyon, Durum) */
+QFrame#HesaplarimInfoFrame1,
+QFrame#HesaplarimInfoFrame2,
+QFrame#HesaplarimInfoFrame3 {
+    background-color: #f9fafb;
+    border-radius: 12px;
+    border: none;
+}
+
+/* Alt Kart Başlıkları (Açılış Tarihi — Komisyon Planı — Durum) */
+QLabel#HesapAcilisBaslik,
+QLabel#KomisyonBaslik,
+QLabel#DurumBaslik {
+    font-size: 13px;
+    color: #667085;
+    font-weight: normal;
+}
+
+/* İç değerler */
+QLabel#HesapAcilisDeger,
+QLabel#KomisyonDeger,
+QLabel#DurumDeger {
+    font-size: 15px;
+    font-weight: 600;
+    color: #101828;
+}
+
+/* Komisyon alt açıklama (Min ₺50 - %1) */
+QLabel#KomisyonAltYazi {
+    font-size: 12px;
+    color: #667085;
+}
+
+/* yeşil Aktif Rozeti */
+QLabel#DurumLabel1 {
+    background-color: #d1fadf;
+    color: #027a48;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    qproperty-alignment: AlignCenter;
+}
+</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QFrame" name="HesaplarimInfoFrame1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>160</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background:rgb(255,255,255)</string>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::Shape::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Shadow::Raised</enum>
+                   </property>
+                   <widget class="QLabel" name="HesapNoLabel">
+                    <property name="geometry">
+                     <rect>
+                      <x>20</x>
+                      <y>10</y>
+                      <width>53</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Hesap No</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="HesapNoLabel1">
+                    <property name="geometry">
+                     <rect>
+                      <x>80</x>
+                      <y>8</y>
+                      <width>74</width>
+                      <height>22</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>HESAPNO</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="BakiyeLabel">
+                    <property name="geometry">
+                     <rect>
+                      <x>740</x>
+                      <y>10</y>
+                      <width>34</width>
+                      <height>16</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">top:right</string>
+                    </property>
+                    <property name="text">
+                     <string>Bakiye</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="YatirimHesabiLabel">
+                    <property name="geometry">
+                     <rect>
+                      <x>40</x>
+                      <y>30</y>
+                      <width>82</width>
+                      <height>18</height>
+                     </rect>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Segoe UI</family>
+                      <pointsize>-1</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Yatırım Hesabı</string>
+                    </property>
+                   </widget>
+                   <widget class="QLabel" name="BakiyeLabel1">
+                    <property name="geometry">
+                     <rect>
+                      <x>700</x>
+                      <y>30</y>
+                      <width>73</width>
+                      <height>24</height>
+                     </rect>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Segoe UI</family>
+                      <pointsize>-1</pointsize>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="midLineWidth">
+                     <number>0</number>
+                    </property>
+                    <property name="text">
+                     <string>800000₺</string>
+                    </property>
+                   </widget>
+                   <widget class="QFrame" name="HesaplarimInfoFrame2">
+                    <property name="geometry">
+                     <rect>
+                      <x>-1</x>
+                      <y>50</y>
+                      <width>781</width>
+                      <height>84</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame#HesapAcilisFrame,
+QFrame#HesapDurumFrame,
+QFrame#KomisyonPlaniFrame{
+background:rgb(230,230,230);
+border-radius: 16px;
+}</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Shadow::Raised</enum>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_2">
+                     <item>
+                      <widget class="QFrame" name="HesapAcilisFrame">
+                       <property name="frameShape">
+                        <enum>QFrame::Shape::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Shadow::Raised</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_7">
+                        <item>
+                         <widget class="QLabel" name="HesapAcilisLabel">
+                          <property name="styleSheet">
+                           <string notr="true">background:transparent</string>
+                          </property>
+                          <property name="text">
+                           <string>Hesap Açılış Tarihi</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="HesapAcilisLabel1">
+                          <property name="font">
+                           <font>
+                            <family>Segoe UI</family>
+                            <pointsize>14</pointsize>
+                            <bold>true</bold>
+                           </font>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">background:transparent</string>
+                          </property>
+                          <property name="text">
+                           <string>10.12.2025</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="KomisyonPlaniFrame">
+                       <property name="frameShape">
+                        <enum>QFrame::Shape::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Shadow::Raised</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_9">
+                        <item>
+                         <widget class="QLabel" name="KomisyonLabel">
+                          <property name="styleSheet">
+                           <string notr="true">background:transparent</string>
+                          </property>
+                          <property name="text">
+                           <string>Komisyon Miktarı</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="KomisyonLabel1">
+                          <property name="styleSheet">
+                           <string notr="true">background:transparent</string>
+                          </property>
+                          <property name="text">
+                           <string>Standart Plan</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="HesapDurumFrame">
+                       <property name="frameShape">
+                        <enum>QFrame::Shape::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Shadow::Raised</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_8">
+                        <property name="leftMargin">
+                         <number>10</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="DurumLabel">
+                          <property name="styleSheet">
+                           <string notr="true">background:transparent</string>
+                          </property>
+                          <property name="text">
+                           <string> Durum</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="DurumLabel1">
+                          <property name="minimumSize">
+                           <size>
+                            <width>50</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>50</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">background:transparent;
+background-color: rgb(170, 255, 127);       /* Açık sarı zemin */
+    color: rgb(0, 170, 0);                  /* Koyu sarı/turuncu yazı */
+    border-radius: 12px;             /* Tam yuvarlak kenarlar */
+    padding: 4px 12px;               /* İçeriden boşluk (Yazı kenara yapışmasın) */
+    font-weight: bold;               /* Kalın yazı */
+    font-family: &quot;Segoe UI&quot;, sans-serif;
+border-radius: 9px;</string>
+                          </property>
+                          <property name="text">
+                           <string>Aktif</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>780</width>
+                     <height>370</height>
+                    </size>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::Shape::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Shadow::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_10">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QFrame" name="frame_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>774</width>
+                        <height>150</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>774</width>
+                        <height>170</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #FFFFFF;       /* Beyaz arka plan */
+    border: 1px solid #E0E0E0;       /* İnce gri çerçeve */
+    border-radius: 12px;             /* Köşeleri yumuşatma */</string>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Shape::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Shadow::Raised</enum>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_11">
+                       <item>
+                        <widget class="QLabel" name="RiskProfiliFrameLabel">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">font-weight: bold;
+    color: #333333;
+    font-size: 14px;
+border: transparent</string>
+                         </property>
+                         <property name="text">
+                          <string>Risk Profili</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="frame_2">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>100</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>100</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: #F8F9FA;       /* Çok açık gri arka plan */
+    border: 1px solid #EAEAEA;       /* Daha da ince çerçeve */
+    border-radius: 8px;              /* İç köşe yuvarlama */</string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::Shape::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Shadow::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_3">
+                          <item>
+                           <widget class="QFrame" name="frame_8">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">border:transparent</string>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <property name="lineWidth">
+                             <number>1</number>
+                            </property>
+                            <widget class="QLabel" name="label_6">
+                             <property name="geometry">
+                              <rect>
+                               <x>10</x>
+                               <y>10</y>
+                               <width>211</width>
+                               <height>31</height>
+                              </rect>
+                             </property>
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">background-color: #FFF9C4;       /* Açık sarı zemin */
+    color: #FBC02D;                  /* Koyu sarı/turuncu yazı */
+    border-radius: 12px;             /* Tam yuvarlak kenarlar */
+    padding: 4px 12px;               /* İçeriden boşluk (Yazı kenara yapışmasın) */
+    font-weight: bold;               /* Kalın yazı */
+    font-family: &quot;Segoe UI&quot;, sans-serif;</string>
+                             </property>
+                             <property name="text">
+                              <string>Risk Profili Türü Buraya Yazılcak</string>
+                             </property>
+                            </widget>
+                            <widget class="QLabel" name="label_7">
+                             <property name="geometry">
+                              <rect>
+                               <x>20</x>
+                               <y>50</y>
+                               <width>201</width>
+                               <height>16</height>
+                              </rect>
+                             </property>
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">color: #666666;
+    font-size: 12px;
+border:transparent</string>
+                             </property>
+                             <property name="text">
+                              <string>Risk Profili Açıklama</string>
+                             </property>
+                            </widget>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="frame_9">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">border:transparent</string>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::Shape::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Shadow::Raised</enum>
+                            </property>
+                            <widget class="QLabel" name="label_8">
+                             <property name="geometry">
+                              <rect>
+                               <x>240</x>
+                               <y>10</y>
+                               <width>101</width>
+                               <height>20</height>
+                              </rect>
+                             </property>
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">border:transparent</string>
+                             </property>
+                             <property name="text">
+                              <string>Maks Hisse Oranı</string>
+                             </property>
+                            </widget>
+                            <widget class="QLabel" name="label_9">
+                             <property name="geometry">
+                              <rect>
+                               <x>280</x>
+                               <y>30</y>
+                               <width>51</width>
+                               <height>20</height>
+                              </rect>
+                             </property>
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+border:transparent</string>
+                             </property>
+                             <property name="text">
+                              <string>%80</string>
+                             </property>
+                            </widget>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QFrame" name="frame_5">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>774</width>
+                        <height>150</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>175</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #FFFFFF;      /* Beyaz zemin */
+    border: 1px solid #E0E0E0;      /* İnce gri çerçeve */
+    border-radius: 15px;            /* Yuvarlak köşeler */</string>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Shape::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Shadow::Raised</enum>
+                      </property>
+                      <widget class="QLabel" name="label_10">
+                       <property name="geometry">
+                        <rect>
+                         <x>20</x>
+                         <y>30</y>
+                         <width>121</width>
+                         <height>16</height>
+                        </rect>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">border:transparent;
+color: #212121;
+    font-size: 16px;
+</string>
+                       </property>
+                       <property name="text">
+                        <string>Sorumlu Broker</string>
+                       </property>
+                      </widget>
+                      <widget class="QLabel" name="label_11">
+                       <property name="geometry">
+                        <rect>
+                         <x>10</x>
+                         <y>50</y>
+                         <width>51</width>
+                         <height>51</height>
+                        </rect>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">background-color: #007BFF;      /* Düz Mavi Renk (İstersen #2196F3 de yapabilirsin) */
+    color: #FFFFFF;                 /* Yazı rengi beyaz */
+    border-radius: 14px;            /* Köşeleri yuvarlatma */
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Segoe UI', sans-serif;</string>
+                       </property>
+                       <property name="text">
+                        <string>  M</string>
+                       </property>
+                      </widget>
+                      <widget class="QLabel" name="YatrmcSorumluBrokerLabel">
+                       <property name="geometry">
+                        <rect>
+                         <x>70</x>
+                         <y>50</y>
+                         <width>161</width>
+                         <height>31</height>
+                        </rect>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">color: #212121;
+    font-size: 15px;
+    font-weight: bold;
+border:transparent;</string>
+                       </property>
+                       <property name="text">
+                        <string>SorumluBroker ismi</string>
+                       </property>
+                      </widget>
+                      <widget class="QFrame" name="frame_6">
+                       <property name="geometry">
+                        <rect>
+                         <x>70</x>
+                         <y>80</y>
+                         <width>301</width>
+                         <height>80</height>
+                        </rect>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">background-color: #F8F9FA;      /* Çok açık gri zemin */
+    border-radius: 8px;             /* Köşeleri yumuşat */
+    /* Kenarlık istersen: border: 1px solid #EEEEEE; */</string>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::Shape::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Shadow::Raised</enum>
+                       </property>
+                       <widget class="QLabel" name="label_12">
+                        <property name="geometry">
+                         <rect>
+                          <x>20</x>
+                          <y>10</y>
+                          <width>49</width>
+                          <height>16</height>
+                         </rect>
+                        </property>
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">color: #888888;
+    font-size: 11px;
+    font-weight: normal;
+border:transparent;</string>
+                        </property>
+                        <property name="text">
+                         <string>Telefon</string>
+                        </property>
+                       </widget>
+                       <widget class="QLabel" name="YatrmcBrokerTelLabel">
+                        <property name="geometry">
+                         <rect>
+                          <x>20</x>
+                          <y>40</y>
+                          <width>91</width>
+                          <height>16</height>
+                         </rect>
+                        </property>
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">color: #333333;
+    font-size: 13px;
+    font-weight: 500;
+border:tranparent;</string>
+                        </property>
+                        <property name="text">
+                         <string>05*********</string>
+                        </property>
+                       </widget>
+                      </widget>
+                      <widget class="QFrame" name="frame_7">
+                       <property name="geometry">
+                        <rect>
+                         <x>380</x>
+                         <y>80</y>
+                         <width>371</width>
+                         <height>80</height>
+                        </rect>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">background-color: #F8F9FA;      /* Çok açık gri zemin */
+    border-radius: 8px;             /* Köşeleri yumuşat */
+    /* Kenarlık istersen: border: 1px solid #EEEEEE; */</string>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::Shape::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Shadow::Raised</enum>
+                       </property>
+                       <widget class="QLabel" name="label_14">
+                        <property name="geometry">
+                         <rect>
+                          <x>20</x>
+                          <y>10</y>
+                          <width>49</width>
+                          <height>16</height>
+                         </rect>
+                        </property>
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">color: #888888;
+    font-size: 11px;
+    font-weight: normal;
+border:transparent;</string>
+                        </property>
+                        <property name="text">
+                         <string>E-posta</string>
+                        </property>
+                       </widget>
+                       <widget class="QLabel" name="yatrmcBrokerEpostaLabel">
+                        <property name="geometry">
+                         <rect>
+                          <x>20</x>
+                          <y>40</y>
+                          <width>151</width>
+                          <height>16</height>
+                         </rect>
+                        </property>
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">color: #333333;
+    font-size: 13px;
+    font-weight: 500;
+border:tranparent;</string>
+                        </property>
+                        <property name="text">
+                         <string>mehmet yıldırr@gmail.com</string>
+                        </property>
+                       </widget>
+                      </widget>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>800</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>800</width>
+            <height>500</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Shape::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="IslemGecmisiScene">
+       <layout class="QVBoxLayout" name="verticalLayout_20">
+        <item>
+         <widget class="QScrollArea" name="scrollArea_2">
+          <property name="minimumSize">
+           <size>
+            <width>795</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">scrollArea {
+    background-color: transparent; /* Kendisi şeffaf olsun */
+    border: none;
+}</string>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>822</width>
+             <height>846</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QWidget" name="widget_3" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>85</height>
+               </size>
+              </property>
+              <widget class="QLabel" name="label_13">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>10</y>
+                 <width>49</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_15">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>10</y>
+                 <width>91</width>
+                 <height>71</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap>../../QT projects/VTYS/proje adımlar/Ekran görüntüsü 2025-12-08 152749.png</pixmap>
+               </property>
+              </widget>
+              <widget class="QLabel" name="KullaniciAdiLabel_2">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>50</y>
+                 <width>91</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(0,0,0)
+</string>
+               </property>
+               <property name="text">
+                <string>Kullanıcı adı</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="YatirimciPaneliLabel_2">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>20</y>
+                 <width>141</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color : rgb(150,150,150)
+</string>
+               </property>
+               <property name="text">
+                <string>Yatırımcı Paneli</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="ExitButton_2">
+               <property name="geometry">
+                <rect>
+                 <x>660</x>
+                 <y>25</y>
+                 <width>131</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(0,0,0)
+</string>
+               </property>
+               <property name="text">
+                <string>Çıkış</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../QT projects/VTYS/proje adımlar/logout.png</normaloff>../../QT projects/VTYS/proje adımlar/logout.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="SekmeGecisFrame_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>90</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>90</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">/* 1. ÜÇ BUTON İÇİN ORTAK TEMEL AYARLAR */
+QPushButton#HesaplarimveBakiyeButon_2,
+QPushButton#IslemGecmisiButon_2,
+QPushButton#PortfoyDurumuButon_2 {
+    border: none;
+	background:none;
+    background-color: transparent; /* Normal halde şeffaf */
+    color: rgb(129, 129, 129);
+	text-color:rgb(0,0,0);
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 3px solid transparent;
+    text-align: left;
+}
+
+/* 2. MOUSE ÜZERİNE GELİNCE (HOVER) */
+QPushButton#HesaplarimveBakiyeButon_2:hover,
+QPushButton#IslemGecmisiButon_2:hover,
+QPushButton#PortfoyDurumuButon_2:hover {
+    color: #101828;
+    background-color: transparent; /* Hover'da da arka plan gelmesin */
+}
+
+/* 3. BUTONA BASILI TUTULDUĞUNDA (PRESSED) - Sorunu Çözen Kısım */
+QPushButton#HesaplarimveBakiyeButon_2:pressed,
+QPushButton#IslemGecmisiButon_2:pressed,
+QPushButton#PortfoyDurumuButon_2:pressed {
+    background-color: transparent; /* Basınca mavi kutu çıkmasını engeller */
+}
+
+/* 4. BUTON SEÇİLİ OLDUĞUNDA (CHECKED) - Sorunu Çözen Kısım */
+QPushButton#HesaplarimveBakiyeButon_2:checked,
+QPushButton#IslemGecmisiButon_2:checked,
+QPushButton#PortfoyDurumuButon_2:checked {
+    color: #2b5cff;
+    border-bottom: 3px solid #2b5cff;
+    background-color: transparent; /* Seçiliyken arka planı şeffaf zorla */
+}</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QPushButton" name="HesaplarimveBakiyeButon_2">
+                 <property name="layoutDirection">
+                  <enum>Qt::LayoutDirection::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Hesaplarım ve Bakiye</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="IslemGecmisiButon_2">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>İşlem Geçmişi</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="PortfoyDurumuButon_2">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Portföy Durumu</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="IslemGecmisiFrame">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>813</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">/* ANA KART (Beyaz alan) */
+QFrame#HaplarimInfoFrame {
+    background-color: #ffffff;
+    border: 1px solid #eaecf0;
+    border-radius: 16px;
+}
+
+/* Üst ikon alanı */
+QFrame#IconFrame {
+    background-color: #eef4ff;
+    border-radius: 12px;
+}
+
+/* GENEL YAZI AYARI */
+QLabel {
+    background: transparent;
+    color: #101828;
+    font-family: &quot;Segoe UI&quot;, sans-serif;
+}
+
+/* Hesap No */
+QLabel#HesapNoLabel1 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Yatırım Hesabı alt yazı */
+QLabel#YatirimHesabiLabel {
+    font-size: 13px;
+    color: #667085;
+}
+
+/* Sağdaki Bakiye Başlığı */
+QLabel#BakiyeBaslikLabel {
+    font-size: 12px;
+    color: #667085;
+}
+
+/* Sağdaki Bakiye Değeri */
+QLabel#BakiyeLabel1 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #101828;
+}
+
+/* ÜÇ ALT KART (Açılış Tarihi, Komisyon, Durum) */
+QFrame#HesaplarimInfoFrame1,
+QFrame#HesaplarimInfoFrame2,
+QFrame#HesaplarimInfoFrame3 {
+    background-color: #f9fafb;
+    border-radius: 12px;
+    border: none;
+}
+
+/* Alt Kart Başlıkları (Açılış Tarihi — Komisyon Planı — Durum) */
+QLabel#HesapAcilisBaslik,
+QLabel#KomisyonBaslik,
+QLabel#DurumBaslik {
+    font-size: 13px;
+    color: #667085;
+    font-weight: normal;
+}
+
+/* İç değerler */
+QLabel#HesapAcilisDeger,
+QLabel#KomisyonDeger,
+QLabel#DurumDeger {
+    font-size: 15px;
+    font-weight: 600;
+    color: #101828;
+}
+
+/* Komisyon alt açıklama (Min ₺50 - %1) */
+QLabel#KomisyonAltYazi {
+    font-size: 12px;
+    color: #667085;
+}
+
+/* yeşil Aktif Rozeti */
+QLabel#DurumLabel1 {
+    background-color: #d1fadf;
+    color: #027a48;
+    border-radius: 12px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: bold;
+    qproperty-alignment: AlignCenter;
+}
+</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_13">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QFrame" name="ToplamBilgilerFrame">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>803</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>120</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <widget class="QFrame" name="frame_10">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;   /* İnce gri çerçeve */
+    border-radius: 12px;</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Shadow::Raised</enum>
+                    </property>
+                    <widget class="QLabel" name="label_16">
+                     <property name="geometry">
+                      <rect>
+                       <x>10</x>
+                       <y>20</y>
+                       <width>41</width>
+                       <height>41</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border-radius: 8px;       /* İkon kutusunun köşeleri */
+    padding: 10px;            /* İkonun kenarlara yapışmaması için */
+    qproperty-alignment: AlignCenter;
+background-color: #E8F5E9;  /* Çok açık yeşil zemin */
+    /* İkon rengi için SVG kullanmak en iyisidir, ama border ile yaparsan: */
+    border: 1px solid #C8E6C9;</string>
+                     </property>
+                     <property name="text">
+                      <string>İcon</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="ToplamAlisLabel">
+                     <property name="geometry">
+                      <rect>
+                       <x>60</x>
+                       <y>20</y>
+                       <width>91</width>
+                       <height>16</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: #757575;          /* Gri renk */
+    font-size: 12px;
+    font-weight: normal;
+border:transparent;</string>
+                     </property>
+                     <property name="text">
+                      <string>Toplam Alış</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="ToplamAlisLabel_1">
+                     <property name="geometry">
+                      <rect>
+                       <x>60</x>
+                       <y>40</y>
+                       <width>101</width>
+                       <height>31</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: #212121;          /* Koyu siyah */
+    font-size: 16px;
+    font-weight: bold;
+border:transparent;</string>
+                     </property>
+                     <property name="text">
+                      <string>8562♦47₺</string>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="frame_12">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;   /* İnce gri çerçeve */
+    border-radius: 12px;</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Shadow::Raised</enum>
+                    </property>
+                    <widget class="QLabel" name="ToplamSatisIconLabel">
+                     <property name="geometry">
+                      <rect>
+                       <x>10</x>
+                       <y>20</y>
+                       <width>41</width>
+                       <height>41</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border-radius: 8px;       /* İkon kutusunun köşeleri */
+    padding: 10px;            /* İkonun kenarlara yapışmaması için */
+    qproperty-alignment: AlignCenter;
+background-color: #FFEBEE;  /* Çok açık kırmızı zemin */
+    border: 1px solid #FFCDD2;</string>
+                     </property>
+                     <property name="text">
+                      <string>İcon</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="ToplamSatisLabel">
+                     <property name="geometry">
+                      <rect>
+                       <x>60</x>
+                       <y>20</y>
+                       <width>101</width>
+                       <height>16</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: #757575;          /* Gri renk */
+    font-size: 12px;
+    font-weight: normal;
+border:transparent;</string>
+                     </property>
+                     <property name="text">
+                      <string>Toplam Satıs</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="ToplamSatisLabel_1">
+                     <property name="geometry">
+                      <rect>
+                       <x>60</x>
+                       <y>40</y>
+                       <width>111</width>
+                       <height>31</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: #212121;          /* Koyu siyah */
+    font-size: 16px;
+    font-weight: bold;
+border:transparent;</string>
+                     </property>
+                     <property name="text">
+                      <string>8562♦47₺</string>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="frame_11">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;   /* İnce gri çerçeve */
+    border-radius: 12px;</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Shape::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Shadow::Raised</enum>
+                    </property>
+                    <widget class="QLabel" name="ToplamKomisyonIconLabel">
+                     <property name="geometry">
+                      <rect>
+                       <x>10</x>
+                       <y>20</y>
+                       <width>41</width>
+                       <height>41</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border-radius: 8px;       /* İkon kutusunun köşeleri */
+    padding: 10px;            /* İkonun kenarlara yapışmaması için */
+    qproperty-alignment: AlignCenter;
+background-color: #E3F2FD;  /* Çok açık mavi zemin */
+    border: 1px solid #BBDEFB;</string>
+                     </property>
+                     <property name="text">
+                      <string>İcon</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="ToplamKomisyonLabel">
+                     <property name="geometry">
+                      <rect>
+                       <x>60</x>
+                       <y>20</y>
+                       <width>111</width>
+                       <height>16</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: #757575;          /* Gri renk */
+    font-size: 12px;
+    font-weight: normal;
+border:transparent;</string>
+                     </property>
+                     <property name="text">
+                      <string>Toplam Komisyon</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="ToplamKomisyonLabel_1">
+                     <property name="geometry">
+                      <rect>
+                       <x>60</x>
+                       <y>40</y>
+                       <width>111</width>
+                       <height>31</height>
+                      </rect>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: #212121;          /* Koyu siyah */
+    font-size: 16px;
+    font-weight: bold;
+border:transparent;</string>
+                     </property>
+                     <property name="text">
+                      <string>8562♦47₺</string>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="FltrelemeFrame">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>130</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>130</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QFrame#FltrelemeFrame{	
+background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+}
+QLabel[class=&quot;inputLabel&quot;] {
+    color: #666666;        /* Gri yazı */
+    font-size: 11px;       /* Küçük punto */
+    font-weight: normal;
+    margin-bottom: 2px;    /* Kutuyla yazı arasına hafif boşluk */
+}
+
+
+/* Üzerine gelince (Hover) rengi koyulaşsın */
+QComboBox:hover, QDateEdit:hover {
+    border: 1px solid #BDBDBD;
+}
+
+/* TIKLANDIĞINDA (FOCUS) - Resimdeki Mavi Kenarlık */
+QComboBox:focus, QDateEdit:focus {
+    border: 2px solid #2196F3;     /* Qt Designer mavisi */
+    color: #000000;
+}</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="label_17">
+                  <property name="geometry">
+                   <rect>
+                    <x>30</x>
+                    <y>10</y>
+                    <width>61</width>
+                    <height>31</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font-size: 14px;
+    color: #333333; /* Koyu gri/siyah metin */
+    margin-bottom: 8px; /* Giriş kutusu ile arasına boşluk */
+    font-weight: 500; /* Orta kalınlık */</string>
+                  </property>
+                  <property name="text">
+                   <string>Filtrele</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_18">
+                  <property name="geometry">
+                   <rect>
+                    <x>34</x>
+                    <y>50</y>
+                    <width>49</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Hesap</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_19">
+                  <property name="geometry">
+                   <rect>
+                    <x>274</x>
+                    <y>50</y>
+                    <width>81</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>İşlem Tipi</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_20">
+                  <property name="geometry">
+                   <rect>
+                    <x>474</x>
+                    <y>50</y>
+                    <width>49</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Başlangıç</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_21">
+                  <property name="geometry">
+                   <rect>
+                    <x>644</x>
+                    <y>50</y>
+                    <width>49</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Bitiş</string>
+                  </property>
+                 </widget>
+                 <widget class="QComboBox" name="comboBox_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>30</x>
+                    <y>80</y>
+                    <width>231</width>
+                    <height>37</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color:grey
+</string>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Tüm Hesaplar</string>
+                   </property>
+                  </item>
+                 </widget>
+                 <widget class="QComboBox" name="comboBox_3">
+                  <property name="geometry">
+                   <rect>
+                    <x>270</x>
+                    <y>80</y>
+                    <width>191</width>
+                    <height>37</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color:grey</string>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Alış</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Satış</string>
+                   </property>
+                  </item>
+                 </widget>
+                 <widget class="QDateEdit" name="dateEdit">
+                  <property name="geometry">
+                   <rect>
+                    <x>470</x>
+                    <y>80</y>
+                    <width>161</width>
+                    <height>37</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/* --- 1. GİRİŞ KUTUSU (INPUT) --- */
+QDateEdit {
+    /* Hafif gri arka plan (Gözü yormaz, modern durur) */
+    background-color: #F3F4F6;
+    /* Çerçeve yok, sadece zemin rengi var (Unstyled look) */
+    border: 1px solid transparent;
+    border-radius: 10px;           /* Daha oval köşeler */
+    padding: 10px 15px;            /* Geniş iç boşluk */
+    color: #1F2937;                /* Koyu antrasit yazı */
+    font-size: 14px;
+    font-family: &quot;Segoe UI&quot;, sans-serif;
+    font-weight: 500;
+}
+
+/* Üzerine gelince (Hover) */
+QDateEdit:hover {
+    background-color: #E5E7EB;     /* Biraz daha koyulaşır */
+}
+
+/* Tıklayınca (Focus) */
+QDateEdit:focus {
+    background-color: #FFFFFF;     /* Beyaz olur */
+    border: 1px solid #3B82F6;     /* Modern Mavi Çerçeve */
+    /* İstersen border yerine sadece renk değişimi de yapabilirsin */
+}
+
+/* --- 2. SAĞDAKİ OK BUTONU --- */
+QDateEdit::drop-down {
+    border: none;
+    background: transparent;
+    width: 30px;
+}
+
+/* Ok İkonu: Bunu daha minimalist yapalım */
+QDateEdit::down-arrow {
+    image: url(:/icons/calendar_modern.png); /* Kendi ikonun yoksa standart ok çıkar */
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+}
+
+/* --- 3. POP-UP TAKVİM (EN ÖNEMLİ KISIM) --- */
+
+/* Takvim Ana Çerçeve */
+QCalendarWidget QWidget {
+    background-color: #FFFFFF;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: none;
+}
+
+/* Takvim Üst Başlık (Ay Yıl Seçimi) */
+QCalendarWidget QToolButton {
+    color: #374151;
+    font-weight: bold;
+    icon-size: 24px;
+    background-color: transparent;
+    margin: 5px;
+    border-radius: 5px;
+}
+QCalendarWidget QToolButton:hover {
+    background-color: #F3F4F6;
+}
+
+/* Takvimdeki Günler Tablosu (Gridleri yok ediyoruz) */
+QCalendarWidget QAbstractItemView:enabled {
+    background-color: white;
+    color: #4B5563;             /* Günlerin yazı rengi */
+    selection-background-color: #3B82F6; /* Seçili gün MAVİ */
+    selection-color: white;
+    font-size: 13px;
+    outline: 0;                 /* Seçimdeki kesik çizgiyi kaldır */
+}
+
+/* Seçili Günün Yuvarlak Olması İçin (Qt'de hile yapmak gerekir) */
+/* Maalesef Qt Designer CSS ile tam daire (border-radius) tablolarda zor çalışır */
+/* Ama renk ve font ile o modern havayı veririz */
+
+/* Hafta Günleri Başlığı (Pzt, Sal...) */
+QCalendarWidget QAbstractItemView:enabled::section {
+    color: #9CA3AF;            /* Soluk gri başlıklar */
+    background-color: white;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 5px;
+    border: none;
+}
+
+/* Üst Navigasyon Çubuğu Rengi */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: white;
+    border-bottom: 1px solid #E5E7EB; /* Başlık ile günler arasına ince çizgi */
+}</string>
+                  </property>
+                  <property name="displayFormat">
+                   <string>d.MM.yyyy</string>
+                  </property>
+                 </widget>
+                 <widget class="QDateEdit" name="dateEdit_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>640</x>
+                    <y>80</y>
+                    <width>151</width>
+                    <height>37</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/* --- 1. GİRİŞ KUTUSU (INPUT) --- */
+QDateEdit {
+    /* Hafif gri arka plan (Gözü yormaz, modern durur) */
+    background-color: #F3F4F6;
+    /* Çerçeve yok, sadece zemin rengi var (Unstyled look) */
+    border: 1px solid transparent;
+    border-radius: 10px;           /* Daha oval köşeler */
+    padding: 10px 15px;            /* Geniş iç boşluk */
+    color: #1F2937;                /* Koyu antrasit yazı */
+    font-size: 14px;
+    font-family: &quot;Segoe UI&quot;, sans-serif;
+    font-weight: 500;
+}
+
+/* Üzerine gelince (Hover) */
+QDateEdit:hover {
+    background-color: #E5E7EB;     /* Biraz daha koyulaşır */
+}
+
+/* Tıklayınca (Focus) */
+QDateEdit:focus {
+    background-color: #FFFFFF;     /* Beyaz olur */
+    border: 1px solid #3B82F6;     /* Modern Mavi Çerçeve */
+    /* İstersen border yerine sadece renk değişimi de yapabilirsin */
+}
+
+
+/* Ok İkonu: Bunu daha minimalist yapalım */
+QDateEdit::down-arrow {
+    image: url(:/icons/calendar_modern.png); /* Kendi ikonun yoksa standart ok çıkar */
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+}
+
+/* --- 3. POP-UP TAKVİM (EN ÖNEMLİ KISIM) --- */
+
+/* Takvim Ana Çerçeve */
+QCalendarWidget QWidget {
+    background-color: #FFFFFF;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: none;
+}
+
+/* Takvim Üst Başlık (Ay Yıl Seçimi) */
+QCalendarWidget QToolButton {
+    color: #374151;
+    font-weight: bold;
+    icon-size: 24px;
+    background-color: transparent;
+    margin: 5px;
+    border-radius: 5px;
+}
+QCalendarWidget QToolButton:hover {
+    background-color: #F3F4F6;
+}
+
+/* Takvimdeki Günler Tablosu (Gridleri yok ediyoruz) */
+QCalendarWidget QAbstractItemView:enabled {
+    background-color: white;
+    color: #4B5563;             /* Günlerin yazı rengi */
+    selection-background-color: #3B82F6; /* Seçili gün MAVİ */
+    selection-color: white;
+    font-size: 13px;
+    outline: 0;                 /* Seçimdeki kesik çizgiyi kaldır */
+}
+
+/* Seçili Günün Yuvarlak Olması İçin (Qt'de hile yapmak gerekir) */
+/* Maalesef Qt Designer CSS ile tam daire (border-radius) tablolarda zor çalışır */
+/* Ama renk ve font ile o modern havayı veririz */
+
+/* Hafta Günleri Başlığı (Pzt, Sal...) */
+QCalendarWidget QAbstractItemView:enabled::section {
+    color: #9CA3AF;            /* Soluk gri başlıklar */
+    background-color: white;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 5px;
+    border: none;
+}
+
+/* Üst Navigasyon Çubuğu Rengi */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: white;
+    border-bottom: 1px solid #E5E7EB; /* Başlık ile günler arasına ince çizgi */
+}</string>
+                  </property>
+                  <property name="minimumDateTime">
+                   <datetime>
+                    <hour>22</hour>
+                    <minute>0</minute>
+                    <second>0</second>
+                    <year>1791</year>
+                    <month>9</month>
+                    <day>14</day>
+                   </datetime>
+                  </property>
+                  <property name="minimumDate">
+                   <date>
+                    <year>1791</year>
+                    <month>9</month>
+                    <day>14</day>
+                   </date>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="HistoryFrame">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>400</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_14">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_6">
+                    <item>
+                     <widget class="QLabel" name="label_22">
+                      <property name="text">
+                       <string>İşlem Geçmişi</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer">
+                      <property name="orientation">
+                       <enum>Qt::Orientation::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_2">
+                      <property name="text">
+                       <string>Dışa Aktar</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QTableWidget" name="tableWidget">
+                    <property name="minimumSize">
+                     <size>
+                      <width>800</width>
+                      <height>140</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>800</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">/* 1. Tablonun Genel Görünümü */
+QTableWidget {
+    background-color: #FFFFFF;
+    border: none;              /* Tablonun dış çizgisini kaldır */
+    gridline-color: #E0E0E0;   /* Eğer grid açarsan rengi bu olsun */
+}
+
+/* 2. Sütun Başlıkları (En Üstteki Gri Yazılar) */
+QHeaderView::section {
+    background-color: #FFFFFF; /* Başlık arka planı beyaz */
+    color: #757575;            /* Yazı rengi gri */
+    font-weight: bold;
+    font-size: 12px;
+    border: none;              /* Kutucuk çizgilerini kaldır */
+    border-bottom: 1px solid #E0E0E0; /* Sadece alta çizgi çek */
+    padding: 10px 5px;         /* Biraz boşluk ver */
+    text-align: left;
+}
+
+/* 3. Satırlar ve Hücreler */
+QTableWidget::item {
+    padding: 10px 5px;         /* Hücre içi boşluk (Ferah görünüm) */
+    border-bottom: 1px solid #F5F5F5; /* Her satırın altına ince çizgi */
+    color: #333333;
+}
+
+/* 4. Seçili Satır Rengi */
+QTableWidget::item:selected {
+    background-color: #F5F7FA; /* Seçilince çok açık mavi/gri olsun */
+    color: #000000;
+}
+
+/* 5. Dışa Aktar Butonu (Mavi) */
+QPushButton {
+    background-color: #0055FF;
+    color: white;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #0044CC;
+}</string>
+                    </property>
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+                    </property>
+                    <property name="selectionBehavior">
+                     <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                    </property>
+                    <property name="showGrid">
+                     <bool>false</bool>
+                    </property>
+                    <attribute name="verticalHeaderVisible">
+                     <bool>true</bool>
+                    </attribute>
+                    <column>
+                     <property name="text">
+                      <string>Yeni Sütun</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Tarih &amp; Saat</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>İşlem</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Miktar</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Birim Fiyat</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Tutar</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Komisyon</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Net Tutar</string>
+                     </property>
+                    </column>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page">
+       <layout class="QVBoxLayout" name="verticalLayout_16">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_15">
+          <item>
+           <widget class="QScrollArea" name="scrollArea_3">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_3">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>819</width>
+               <height>616</height>
+              </rect>
+             </property>
+             <widget class="QWidget" name="widget_4" native="true">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>10</y>
+                <width>821</width>
+                <height>80</height>
+               </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>85</height>
+               </size>
+              </property>
+              <widget class="QLabel" name="label_23">
+               <property name="geometry">
+                <rect>
+                 <x>30</x>
+                 <y>10</y>
+                 <width>49</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_24">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>10</y>
+                 <width>91</width>
+                 <height>71</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap>../../QT projects/VTYS/proje adımlar/Ekran görüntüsü 2025-12-08 152749.png</pixmap>
+               </property>
+              </widget>
+              <widget class="QLabel" name="KullaniciAdiLabel_3">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>50</y>
+                 <width>91</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(0,0,0)
+</string>
+               </property>
+               <property name="text">
+                <string>Kullanıcı adı</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="YatirimciPaneliLabel_3">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>20</y>
+                 <width>141</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color : rgb(150,150,150)
+</string>
+               </property>
+               <property name="text">
+                <string>Yatırımcı Paneli</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="ExitButton_3">
+               <property name="geometry">
+                <rect>
+                 <x>660</x>
+                 <y>25</y>
+                 <width>131</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(0,0,0)
+</string>
+               </property>
+               <property name="text">
+                <string>Çıkış</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../../QT projects/VTYS/proje adımlar/logout.png</normaloff>../../QT projects/VTYS/proje adımlar/logout.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QFrame" name="SekmeGecisFrame_3">
+              <property name="geometry">
+               <rect>
+                <x>2</x>
+                <y>100</y>
+                <width>821</width>
+                <height>90</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>90</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>90</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">/* 1. ÜÇ BUTON İÇİN ORTAK TEMEL AYARLAR */
+QPushButton#HesaplarimveBakiyeButon_3,
+QPushButton#IslemGecmisiButon_3,
+QPushButton#PortfoyDurumuButon_3 {
+    border: none;
+	background:none;
+    background-color: transparent; /* Normal halde şeffaf */
+    color: rgb(129, 129, 129);
+	text-color:rgb(0,0,0);
+    font-size: 14px;
+    font-weight: 500;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 3px solid transparent;
+    text-align: left;
+}
+
+/* 2. MOUSE ÜZERİNE GELİNCE (HOVER) */
+QPushButton#HesaplarimveBakiyeButon_3:hover,
+QPushButton#IslemGecmisiButon_3:hover,
+QPushButton#PortfoyDurumuButon_3:hover {
+    color: #101828;
+    background-color: transparent; /* Hover'da da arka plan gelmesin */
+}
+
+/* 3. BUTONA BASILI TUTULDUĞUNDA (PRESSED) - Sorunu Çözen Kısım */
+QPushButton#HesaplarimveBakiyeButon_3:pressed,
+QPushButton#IslemGecmisiButon_3:pressed,
+QPushButton#PortfoyDurumuButon_3:pressed {
+    background-color: transparent; /* Basınca mavi kutu çıkmasını engeller */
+}
+
+/* 4. BUTON SEÇİLİ OLDUĞUNDA (CHECKED) - Sorunu Çözen Kısım */
+QPushButton#HesaplarimveBakiyeButon_3:checked,
+QPushButton#IslemGecmisiButon_3:checked,
+QPushButton#PortfoyDurumuButon_3:checked {
+    color: #2b5cff;
+    border-bottom: 3px solid #2b5cff;
+    background-color: transparent; /* Seçiliyken arka planı şeffaf zorla */
+}</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QPushButton" name="HesaplarimveBakiyeButon_3">
+                 <property name="layoutDirection">
+                  <enum>Qt::LayoutDirection::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Hesaplarım ve Bakiye</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="IslemGecmisiButon_3">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>İşlem Geçmişi</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="PortfoyDurumuButon_3">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Portföy Durumu</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QFrame" name="frame_13">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>200</y>
+                <width>821</width>
+                <height>101</height>
+               </rect>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <widget class="QFrame" name="frame_16">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="label_25">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>31</width>
+                    <height>31</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background:grey
+</string>
+                  </property>
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="PozisyonSayisiLabel">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>10</y>
+                    <width>101</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Pozisyon Sayısı</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="PozisyonSayisiabel_1">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>30</y>
+                    <width>49</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>4</string>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_17">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="label_28">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>31</width>
+                    <height>31</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background:grey
+</string>
+                  </property>
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="ToplamMaliyet_1">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>30</y>
+                    <width>71</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>18265₺</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="ToplamMaliyetLabel">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>10</y>
+                    <width>101</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Toplam Maliyet</string>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_14">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="label_31">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>31</width>
+                    <height>31</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background:grey</string>
+                  </property>
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="GuncelDegerLabel_1">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>30</y>
+                    <width>81</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>189565₺</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="GuncelDegerLabel">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>10</y>
+                    <width>101</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Güncel Değer</string>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_15">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Shadow::Raised</enum>
+                 </property>
+                 <widget class="QLabel" name="label_34">
+                  <property name="geometry">
+                   <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>31</width>
+                    <height>31</height>
+                   </rect>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background:grey</string>
+                  </property>
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_35">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>30</y>
+                    <width>49</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>+%6.45</string>
+                  </property>
+                 </widget>
+                 <widget class="QLabel" name="label_36">
+                  <property name="geometry">
+                   <rect>
+                    <x>60</x>
+                    <y>10</y>
+                    <width>71</width>
+                    <height>16</height>
+                   </rect>
+                  </property>
+                  <property name="text">
+                   <string>Kar/Zarar</string>
+                  </property>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>861</width>
+     <height>33</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

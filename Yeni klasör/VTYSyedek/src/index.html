@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yatırım Takip Sistemi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .lucide-icon {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .responsive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // Global State
+        const state = {
+            currentUser: null,
+            currentScreen: 'login',
+            currentTab: null,
+            selectedClient: null,
+            detailModalClient: null,
+            searchQuery: '',
+            selectedPeriod: 'month',
+            showSuccess: false,
+            showNewAccountModal: false,
+            newAccountForm: {
+                selectedBroker: '',
+                initialDeposit: '',
+                commissionPlan: 'Standart Plan'
+            },
+            transactionForm: {
+                selectedAccount: '',
+                selectedAsset: '',
+                transactionType: 'ALIS',
+                amount: '',
+                unitPrice: ''
+            },
+            filterState: {
+                selectedAccount: 'all',
+                selectedType: 'all',
+                dateFrom: '',
+                dateTo: ''
+            }
+        };
+
+        // Mock Data
+        const mockUsers = {
+            broker: {
+                username: 'mehmet.yildirim',
+                password: 'broker123',
+                data: {
+                    id: 1,
+                    name: 'Mehmet',
+                    surname: 'Yıldırım',
+                    email: 'mehmet.yildirim@broker.com',
+                    role: 'broker'
+                }
+            },
+            investor: {
+                username: 'ayse.kaya',
+                password: 'investor123',
+                data: {
+                    id: 1,
+                    name: 'Ayşe',
+                    surname: 'Kaya',
+                    email: 'ayse.kaya@email.com',
+                    role: 'investor'
+                }
+            }
+        };
+
+        const brokerData = {
+            name: 'Mehmet Yıldırım',
+            position: 'Kıdemli Yatırım Danışmanı',
+            email: 'mehmet.yildirim@broker.com',
+            totalCommission: 124500,
+            monthlyCommission: 18750,
+            accountCount: 24,
+            activeClients: 21
+        };
+
+        const recentTransactions = [
+            { id: 1, date: '2025-12-05 14:30', client: 'Ayşe Kaya', asset: 'THYAO', type: 'ALIS', amount: 1000, price: 245.50, commission: 245.50 },
+            { id: 2, date: '2025-12-05 11:15', client: 'Mehmet Özkan', asset: 'GARAN', type: 'SATIS', amount: 500, price: 38.75, commission: 193.75 },
+            { id: 3, date: '2025-12-04 16:45', client: 'Zeynep Demir', asset: 'AKBNK', type: 'ALIS', amount: 2000, price: 52.30, commission: 523.00 },
+            { id: 4, date: '2025-12-04 10:20', client: 'Ali Yılmaz', asset: 'EREGL', type: 'ALIS', amount: 1500, price: 48.90, commission: 366.75 },
+            { id: 5, date: '2025-12-03 15:00', client: 'Fatma Aydın', asset: 'KCHOL', type: 'SATIS', amount: 800, price: 156.20, commission: 624.80 }
+        ];
+
+        const monthlyStats = [
+            { month: 'Haziran', commission: 15200, clients: 18 },
+            { month: 'Temmuz', commission: 18900, clients: 20 },
+            { month: 'Ağustos', commission: 16500, clients: 21 },
+            { month: 'Eylül', commission: 21300, clients: 22 },
+            { month: 'Ekim', commission: 19800, clients: 23 },
+            { month: 'Kasım', commission: 18750, clients: 24 }
+        ];
+
+        const clients = [
+            {
+                id: 1, name: 'Ayşe Kaya', phone: '+90 532 111 22 33', email: 'ayse.kaya@email.com',
+                accounts: [{ accountId: 'HSP-2022-001', balance: 850000, openDate: '2022-03-15', commissionPlan: 'Standart Plan', minCommission: 50 }],
+                riskProfile: { name: 'Dengeli', maxStockRatio: 60, description: 'Orta düzey risk toleransı' }
+            },
+            {
+                id: 2, name: 'Mehmet Özkan', phone: '+90 532 222 33 44', email: 'mehmet.ozkan@email.com',
+                accounts: [{ accountId: 'HSP-2021-045', balance: 1250000, openDate: '2021-11-20', commissionPlan: 'Premium Plan', minCommission: 100 }],
+                riskProfile: { name: 'Agresif', maxStockRatio: 90, description: 'Yüksek risk toleransı' }
+            },
+            {
+                id: 3, name: 'Zeynep Demir', phone: '+90 532 333 44 55', email: 'zeynep.demir@email.com',
+                accounts: [
+                    { accountId: 'HSP-2023-012', balance: 450000, openDate: '2023-01-10', commissionPlan: 'Standart Plan', minCommission: 50 },
+                    { accountId: 'HSP-2023-078', balance: 320000, openDate: '2023-06-22', commissionPlan: 'Standart Plan', minCommission: 50 }
+                ],
+                riskProfile: { name: 'Muhafazakar', maxStockRatio: 30, description: 'Düşük risk toleransı' }
+            },
+            {
+                id: 4, name: 'Ali Yılmaz', phone: '+90 532 444 55 66', email: 'ali.yilmaz@email.com',
+                accounts: [{ accountId: 'HSP-2022-089', balance: 675000, openDate: '2022-08-05', commissionPlan: 'Premium Plan', minCommission: 100 }],
+                riskProfile: { name: 'Dengeli', maxStockRatio: 60, description: 'Orta düzey risk toleransı' }
+            }
+        ];
+
+        const accounts = [
+            { id: 'HSP-2022-001', clientName: 'Ayşe Kaya', balance: 850000 },
+            { id: 'HSP-2021-045', clientName: 'Mehmet Özkan', balance: 1250000 },
+            { id: 'HSP-2023-012', clientName: 'Zeynep Demir', balance: 450000 },
+            { id: 'HSP-2023-078', clientName: 'Zeynep Demir', balance: 320000 },
+            { id: 'HSP-2022-089', clientName: 'Ali Yılmaz', balance: 675000 }
+        ];
+
+        const assets = [
+            { id: 'THYAO', name: 'Türk Hava Yolları', type: 'Hisse', currentPrice: 245.50 },
+            { id: 'GARAN', name: 'Garanti Bankası', type: 'Hisse', currentPrice: 38.75 },
+            { id: 'AKBNK', name: 'Akbank', type: 'Hisse', currentPrice: 52.30 },
+            { id: 'EREGL', name: 'Ereğli Demir Çelik', type: 'Hisse', currentPrice: 48.90 },
+            { id: 'KCHOL', name: 'Koç Holding', type: 'Hisse', currentPrice: 156.20 },
+            { id: 'SAHOL', name: 'Sabancı Holding', type: 'Hisse', currentPrice: 78.40 },
+            { id: 'PETKM', name: 'Petkim', type: 'Hisse', currentPrice: 34.60 },
+            { id: 'TUPRS', name: 'Tüpraş', type: 'Hisse', currentPrice: 189.30 }
+        ];
+
+        const investorData = {
+            name: 'Ayşe Kaya',
+            email: 'ayse.kaya@email.com',
+            phone: '+90 532 111 22 33',
+            riskProfile: { name: 'Dengeli', description: 'Orta düzey risk toleransı ile dengeli portföy yapısı', maxStockRatio: 60 },
+            broker: { name: 'Mehmet Yıldırım', phone: '+90 532 987 65 43', email: 'mehmet.yildirim@broker.com' }
+        };
+
+        const availableBrokers = [
+            { id: 1, name: 'Mehmet Yıldırım', email: 'mehmet.yildirim@broker.com', phone: '+90 532 987 65 43' },
+            { id: 2, name: 'Elif Demir', email: 'elif.demir@broker.com', phone: '+90 532 111 22 33' },
+            { id: 3, name: 'Ahmet Kaya', email: 'ahmet.kaya@broker.com', phone: '+90 532 222 33 44' },
+            { id: 4, name: 'Zeynep Aydın', email: 'zeynep.aydin@broker.com', phone: '+90 532 333 44 55' }
+        ];
+
+        const investorAccounts = [
+            {
+                accountId: 'HSP-2022-001',
+                balance: 850000,
+                openDate: '2022-03-15',
+                status: 'active', // active or frozen
+                commissionPlan: { name: 'Standart Plan', minCommission: 50, rate: 1.0 },
+                brokerId: 1
+            },
+            {
+                accountId: 'HSP-2023-089',
+                balance: 450000,
+                openDate: '2023-08-20',
+                status: 'active',
+                commissionPlan: { name: 'Premium Plan', minCommission: 100, rate: 0.8 },
+                brokerId: 2
+            }
+        ];
+
+        const transactions = [
+            { id: 1, date: '2025-12-05 14:30:00', accountId: 'HSP-2022-001', asset: 'THYAO', assetName: 'Türk Hava Yolları', type: 'ALIS', amount: 1000, unitPrice: 245.50, total: 245500, commission: 2455, netTotal: 247955 },
+            { id: 2, date: '2025-12-03 11:20:00', accountId: 'HSP-2022-001', asset: 'GARAN', assetName: 'Garanti Bankası', type: 'SATIS', amount: 500, unitPrice: 38.75, total: 19375, commission: 193.75, netTotal: 19181.25 },
+            { id: 3, date: '2025-12-01 09:15:00', accountId: 'HSP-2022-001', asset: 'AKBNK', assetName: 'Akbank', type: 'ALIS', amount: 2000, unitPrice: 52.30, total: 104600, commission: 1046, netTotal: 105646 },
+            { id: 4, date: '2025-11-28 16:45:00', accountId: 'HSP-2022-001', asset: 'EREGL', assetName: 'Ereğli Demir Çelik', type: 'ALIS', amount: 1500, unitPrice: 48.90, total: 73350, commission: 733.50, netTotal: 74083.50 },
+            { id: 5, date: '2025-11-25 10:30:00', accountId: 'HSP-2022-001', asset: 'KCHOL', assetName: 'Koç Holding', type: 'SATIS', amount: 300, unitPrice: 156.20, total: 46860, commission: 468.60, netTotal: 46391.40 },
+            { id: 6, date: '2025-11-20 14:00:00', accountId: 'HSP-2022-001', asset: 'SAHOL', assetName: 'Sabancı Holding', type: 'ALIS', amount: 1200, unitPrice: 78.40, total: 94080, commission: 940.80, netTotal: 95020.80 }
+        ];
+
+        const portfolioPositions = [
+            { assetId: 'THYAO', assetName: 'Türk Hava Yolları', type: 'Hisse', totalBought: 1000, totalSold: 0, currentAmount: 1000, avgBuyPrice: 245.50, totalCost: 245500, currentPrice: 248.30, currentValue: 248300, profitLoss: 2800, profitLossPercent: 1.14 },
+            { assetId: 'AKBNK', assetName: 'Akbank', type: 'Hisse', totalBought: 2000, totalSold: 0, currentAmount: 2000, avgBuyPrice: 52.30, totalCost: 104600, currentPrice: 54.10, currentValue: 108200, profitLoss: 3600, profitLossPercent: 3.44 },
+            { assetId: 'EREGL', assetName: 'Ereğli Demir Çelik', type: 'Hisse', totalBought: 1500, totalSold: 0, currentAmount: 1500, avgBuyPrice: 48.90, totalCost: 73350, currentPrice: 47.20, currentValue: 70800, profitLoss: -2550, profitLossPercent: -3.48 },
+            { assetId: 'SAHOL', assetName: 'Sabancı Holding', type: 'Hisse', totalBought: 1200, totalSold: 0, currentAmount: 1200, avgBuyPrice: 78.40, totalCost: 94080, currentPrice: 80.50, currentValue: 96600, profitLoss: 2520, profitLossPercent: 2.68 }
+        ];
+
+        // Utility Functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('tr-TR').format(amount);
+        }
+
+        function getRiskColor(riskName) {
+            const colors = {
+                'Agresif': 'bg-red-100 text-red-800 border-red-200',
+                'Dengeli': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                'Muhafazakar': 'bg-green-100 text-green-800 border-green-200'
+            };
+            return colors[riskName] || 'bg-gray-100 text-gray-800 border-gray-200';
+        }
+
+        // SVG Icons
+        const icons = {
+            trendingUp: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            trendingDown: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>',
+            lock: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+            user: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+            chevronDown: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>',
+            chevronRight: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>',
+            briefcase: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
+            barChart3: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>',
+            users: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+            plus: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+            logOut: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>',
+            dollarSign: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
+            calendar: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
+            activity: '<svg class="lucide-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>',
+            arrowUpRight: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>',
+            arrowDownRight: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="7" y1="7" x2="17" y2="17"></line><polyline points="17 7 17 17 7 17"></polyline></svg>',
+            download: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+            search: '<svg class="lucide-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            phone: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>',
+            mail: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>',
+            shield: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
+            x: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+            checkCircle: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>',
+            alertCircle: '<svg class="lucide-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>',
+            wallet: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>',
+            receipt: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 17V7"></path></svg>',
+            pieChart: '<svg class="lucide-icon" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>',
+            creditCard: '<svg class="lucide-icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',
+            filter: '<svg class="lucide-icon" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>',
+            package: '<svg class="lucide-icon" viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
+            pauseCircle: '<svg class="lucide-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="10" y1="15" x2="10" y2="9"></line><line x1="14" y1="15" x2="14" y2="9"></line></svg>',
+            playCircle: '<svg class="lucide-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>'
+        };
+
+        // Render Functions
+        function renderLoginScreen() {
+            return `
+                <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+                    <div class="max-w-md w-full">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
+                                ${icons.trendingUp}
+                            </div>
+                            <h1 class="text-3xl font-bold text-gray-900 mb-2">Yatırım Takip Sistemi</h1>
+                            <p class="text-gray-600">Hesabınıza giriş yapın</p>
+                        </div>
+
+                        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                            <form id="loginForm" class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Giriş Tipi</label>
+                                    <div class="relative">
+                                        <select id="userType" class="w-full px-4 py-3 pr-10 bg-gray-50 border border-gray-300 rounded-xl appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                                            <option value="investor">Yatırımcı</option>
+                                            <option value="broker">Broker / Çalışan</option>
+                                        </select>
+                                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">${icons.chevronDown}</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Kullanıcı Adı</label>
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${icons.user}</div>
+                                        <input type="text" id="username" placeholder="kullanici.adi" 
+                                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" required />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Şifre</label>
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${icons.lock}</div>
+                                        <input type="password" id="password" placeholder="••••••••" 
+                                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" required />
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl">
+                                    Giriş Yap
+                                </button>
+                            </form>
+
+                            <div class="mt-6 pt-6 border-t border-gray-200">
+                                <p class="text-xs text-gray-500 mb-3">Demo hesapları:</p>
+                                <div class="space-y-2 text-xs">
+                                    <div class="bg-blue-50 p-3 rounded-lg">
+                                        <p class="text-blue-900"><span class="opacity-75">Yatırımcı:</span> ayse.kaya / investor123</p>
+                                    </div>
+                                    <div class="bg-indigo-50 p-3 rounded-lg">
+                                        <p class="text-indigo-900"><span class="opacity-75">Broker:</span> mehmet.yildirim / broker123</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBrokerPerformanceTab() {
+            const maxCommission = Math.max(...monthlyStats.map(s => s.commission));
+            
+            return `
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h2 class="text-2xl font-bold text-white mb-2">${brokerData.name}</h2>
+                                <p class="text-indigo-100 mb-1">${brokerData.position}</p>
+                                <p class="text-indigo-200 text-sm">${brokerData.email}</p>
+                            </div>
+                            <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                                <span class="text-3xl font-bold">${brokerData.name.charAt(0)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">${icons.dollarSign}</div>
+                                <div class="flex items-center gap-1 text-green-600 text-sm">
+                                    ${icons.arrowUpRight}
+                                    <span>+12.5%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Toplam Komisyon</p>
+                            <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(brokerData.totalCommission)}</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">${icons.calendar}</div>
+                                <div class="flex items-center gap-1 text-blue-600 text-sm">
+                                    ${icons.arrowUpRight}
+                                    <span>+5.2%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Aylık Komisyon</p>
+                            <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(brokerData.monthlyCommission)}</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">${icons.users}</div>
+                                <div class="flex items-center gap-1 text-indigo-600 text-sm">
+                                    ${icons.arrowUpRight}
+                                    <span>+3</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Toplam Müşteri</p>
+                            <p class="text-2xl font-bold text-gray-900">${brokerData.accountCount}</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">${icons.activity}</div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Aktif Müşteri</p>
+                            <p class="text-2xl font-bold text-gray-900">${brokerData.activeClients} / ${brokerData.accountCount}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-900">Aylık Performans</h3>
+                            <div class="flex items-center gap-2">
+                                <button onclick="setPeriod('week')" class="px-3 py-1 rounded-lg text-sm transition-colors ${state.selectedPeriod === 'week' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">Haftalık</button>
+                                <button onclick="setPeriod('month')" class="px-3 py-1 rounded-lg text-sm transition-colors ${state.selectedPeriod === 'month' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">Aylık</button>
+                                <button onclick="setPeriod('year')" class="px-3 py-1 rounded-lg text-sm transition-colors ${state.selectedPeriod === 'year' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">Yıllık</button>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            ${monthlyStats.map(stat => {
+                                const percentage = (stat.commission / maxCommission) * 100;
+                                return `
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm text-gray-600">${stat.month}</span>
+                                            <div class="flex items-center gap-4">
+                                                <span class="text-sm text-gray-500">${stat.clients} müşteri</span>
+                                                <span class="font-semibold text-gray-900">₺${formatCurrency(stat.commission)}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-2">
+                                            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all" style="width: ${percentage}%"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-gray-900">Son 5 İşlem</h3>
+                            <button onclick="handleExportReport()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm">
+                                ${icons.download}
+                                <span>Rapor İndir</span>
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Tarih & Saat</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Müşteri</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Varlık</th>
+                                        <th class="px-6 py-3 text-center text-sm font-medium text-gray-600">İşlem Tipi</th>
+                                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-600">Miktar</th>
+                                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-600">Birim Fiyat</th>
+                                        <th class="px-6 py-3 text-right text-sm font-medium text-gray-600">Komisyon</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    ${recentTransactions.map(t => `
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-6 py-4 text-sm text-gray-600">${t.date}</td>
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${t.client}</td>
+                                            <td class="px-6 py-4">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">${t.asset}</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${t.type === 'ALIS' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">${formatCurrency(t.amount)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${t.price.toFixed(2)}</td>
+                                            <td class="px-6 py-4 text-right text-sm font-medium text-green-600">₺${t.commission.toFixed(2)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBrokerClientManagementTab() {
+            const filteredClients = clients.filter(c => 
+                c.name.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                c.email.toLowerCase().includes(state.searchQuery.toLowerCase())
+            );
+
+            const detailClient = state.detailModalClient ? clients.find(c => c.id === state.detailModalClient) : null;
+
+            return `
+                ${detailClient ? `
+                    <div class="fixed inset-0 bg-black/50 modal-backdrop z-50 flex items-center justify-center p-4">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                            <div class="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center text-white">
+                                        <span class="text-xl font-bold">${detailClient.name.charAt(0)}</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white">Müşteri Detayları</h3>
+                                        <p class="text-indigo-100 text-sm">${detailClient.name}</p>
+                                    </div>
+                                </div>
+                                <button onclick="closeDetailModal()" class="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
+                                    ${icons.x}
+                                </button>
+                            </div>
+
+                            <div class="p-6 space-y-6">
+                                <div>
+                                    <h4 class="text-lg font-bold text-gray-900 mb-3">İletişim Bilgileri</h4>
+                                    <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                                        <div class="flex items-center gap-3">
+                                            ${icons.phone}
+                                            <div>
+                                                <p class="text-xs text-gray-500">Telefon</p>
+                                                <p class="text-sm font-medium text-gray-900">${detailClient.phone}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            ${icons.mail}
+                                            <div>
+                                                <p class="text-xs text-gray-500">E-posta</p>
+                                                <p class="text-sm font-medium text-gray-900">${detailClient.email}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-lg font-bold text-gray-900 mb-3">Risk Profili</h4>
+                                    <div class="bg-gray-50 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getRiskColor(detailClient.riskProfile.name)}">${detailClient.riskProfile.name}</span>
+                                            <span class="text-sm text-gray-600">Max Hisse Oranı: <span class="font-semibold text-gray-900">%${detailClient.riskProfile.maxStockRatio}</span></span>
+                                        </div>
+                                        <p class="text-sm text-gray-700">${detailClient.riskProfile.description}</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-lg font-bold text-gray-900 mb-3">Hesaplar (${detailClient.accounts.length})</h4>
+                                    <div class="space-y-3">
+                                        ${detailClient.accounts.map(acc => `
+                                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                                <div class="grid grid-cols-2 gap-4 mb-3">
+                                                    <div>
+                                                        <p class="text-xs text-gray-500 mb-1">Hesap No</p>
+                                                        <p class="text-sm font-medium text-gray-900">${acc.accountId}</p>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <p class="text-xs text-gray-500 mb-1">Bakiye</p>
+                                                        <p class="text-sm font-medium text-gray-900">₺${formatCurrency(acc.balance)}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <p class="text-xs text-gray-500 mb-1">Açılış Tarihi</p>
+                                                        <p class="text-sm font-medium text-gray-900">${acc.openDate}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-gray-500 mb-1">Komisyon Planı</p>
+                                                        <p class="text-sm font-medium text-gray-900">${acc.commissionPlan}</p>
+                                                        <p class="text-xs text-gray-500">Min: ₺${acc.minCommission}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-3 pt-4 border-t border-gray-200">
+                                    <button class="flex-1 bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium">İşlem Geçmişini Gör</button>
+                                    <button class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">Portföyü Görüntüle</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                        <div class="relative">
+                            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${icons.search}</div>
+                            <input type="text" placeholder="Müşteri ara (isim veya e-posta)..." value="${state.searchQuery}"
+                                oninput="updateSearchQuery(event.target.value)"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">${icons.user}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Müşteri</p>
+                                    <p class="text-2xl font-bold text-gray-900">${clients.length}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">${icons.dollarSign}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Hesap</p>
+                                    <p class="text-2xl font-bold text-gray-900">${clients.reduce((sum, c) => sum + c.accounts.length, 0)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">${icons.trendingUp}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Varlık</p>
+                                    <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(clients.reduce((sum, c) => sum + c.accounts.reduce((acc, a) => acc + a.balance, 0), 0))}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        ${filteredClients.map(client => `
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                                <div class="p-6 cursor-pointer hover:bg-gray-50 transition-colors" onclick="toggleClient(${client.id})">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex items-start gap-4">
+                                            <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
+                                                <span class="text-xl font-bold">${client.name.charAt(0)}</span>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-lg font-bold text-gray-900 mb-2">${client.name}</h3>
+                                                <div class="flex flex-col gap-1">
+                                                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                        <div class="w-4 h-4">${icons.phone}</div>
+                                                        <span>${client.phone}</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                                                        <div class="w-4 h-4">${icons.mail}</div>
+                                                        <span>${client.email}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm text-gray-600 mb-1">${client.accounts.length} Hesap</p>
+                                            <p class="text-xl font-bold text-gray-900">₺${formatCurrency(client.accounts.reduce((sum, acc) => sum + acc.balance, 0))}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                ${state.selectedClient === client.id ? `
+                                    <div class="border-t border-gray-200 bg-gray-50 p-6">
+                                        <div class="mb-6">
+                                            <div class="flex items-center gap-2 mb-3">
+                                                ${icons.shield}
+                                                <h4 class="text-lg font-bold text-gray-900">Risk Profili</h4>
+                                            </div>
+                                            <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getRiskColor(client.riskProfile.name)}">${client.riskProfile.name}</span>
+                                                    <span class="text-sm text-gray-600">Max Hisse Oranı: <span class="font-semibold text-gray-900">%${client.riskProfile.maxStockRatio}</span></span>
+                                                </div>
+                                                <p class="text-sm text-gray-600">${client.riskProfile.description}</p>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="flex items-center gap-2 mb-3">
+                                                ${icons.dollarSign}
+                                                <h4 class="text-lg font-bold text-gray-900">Hesaplar</h4>
+                                            </div>
+                                            <div class="space-y-3">
+                                                ${client.accounts.map(acc => `
+                                                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 mb-1">Hesap No</p>
+                                                                <p class="text-sm font-medium text-gray-900">${acc.accountId}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 mb-1">Bakiye</p>
+                                                                <p class="text-sm font-medium text-gray-900">₺${formatCurrency(acc.balance)}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 mb-1">Komisyon Planı</p>
+                                                                <p class="text-sm font-medium text-gray-900">${acc.commissionPlan}</p>
+                                                                <p class="text-xs text-gray-500">Min: ₺${acc.minCommission}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 mb-1">Açılış Tarihi</p>
+                                                                <p class="text-sm font-medium text-gray-900">${acc.openDate}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4 pt-4 border-t border-gray-100">
+                                            <button onclick="openDetailModal(${client.id})" class="w-full lg:w-auto bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 font-medium">
+                                                <span>Müşteri Detaylarını Görüntüle</span>
+                                                ${icons.chevronRight}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    ${filteredClients.length === 0 ? `
+                        <div class="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-200">
+                            ${icons.user}
+                            <p class="text-gray-600 mt-3">Müşteri bulunamadı</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderBrokerNewTransactionTab() {
+            const selectedAsset = assets.find(a => a.id === state.transactionForm.selectedAsset);
+            const selectedAccount = accounts.find(a => a.id === state.transactionForm.selectedAccount);
+            
+            const calculateTotal = () => {
+                const qty = parseFloat(state.transactionForm.amount) || 0;
+                const price = parseFloat(state.transactionForm.unitPrice) || 0;
+                return qty * price;
+            };
+
+            const calculateCommission = () => calculateTotal() * 0.01;
+            const total = calculateTotal();
+            const commission = calculateCommission();
+
+            return `
+                <div class="max-w-4xl mx-auto space-y-6">
+                    ${state.showSuccess ? `
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
+                            ${icons.checkCircle}
+                            <div>
+                                <p class="font-semibold text-green-900">İşlem başarıyla kaydedildi!</p>
+                                <p class="text-sm text-green-700">İşlem detayları müşteriye bildirildi.</p>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">${icons.plus}</div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-white">Yeni İşlem Girişi</h2>
+                                    <p class="text-indigo-100 text-sm">Müşteri adına alım veya satım işlemi kaydedin</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="transactionForm" class="p-6 space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hesap Seçimi <span class="text-red-500">*</span></label>
+                                <select id="selectedAccount" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
+                                    <option value="">Hesap seçiniz...</option>
+                                    ${accounts.map(acc => `
+                                        <option value="${acc.id}" ${state.transactionForm.selectedAccount === acc.id ? 'selected' : ''}>
+                                            ${acc.id} - ${acc.clientName} (Bakiye: ₺${formatCurrency(acc.balance)})
+                                        </option>
+                                    `).join('')}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">İşlem Tipi <span class="text-red-500">*</span></label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <button type="button" onclick="setTransactionType('ALIS')" 
+                                        class="p-4 rounded-lg border-2 transition-all ${state.transactionForm.transactionType === 'ALIS' ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white hover:border-gray-300'}">
+                                        <div class="flex items-center justify-center gap-2 mb-2">
+                                            <div class="${state.transactionForm.transactionType === 'ALIS' ? 'text-green-600' : 'text-gray-400'}">${icons.trendingUp}</div>
+                                            <span class="font-medium ${state.transactionForm.transactionType === 'ALIS' ? 'text-green-900' : 'text-gray-700'}">Alış</span>
+                                        </div>
+                                    </button>
+                                    <button type="button" onclick="setTransactionType('SATIS')" 
+                                        class="p-4 rounded-lg border-2 transition-all ${state.transactionForm.transactionType === 'SATIS' ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'}">
+                                        <div class="flex items-center justify-center gap-2 mb-2">
+                                            <div class="${state.transactionForm.transactionType === 'SATIS' ? 'text-red-600' : 'text-gray-400'}">${icons.trendingDown}</div>
+                                            <span class="font-medium ${state.transactionForm.transactionType === 'SATIS' ? 'text-red-900' : 'text-gray-700'}">Satış</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Varlık Seçimi <span class="text-red-500">*</span></label>
+                                <select id="selectedAsset" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
+                                    <option value="">Varlık seçiniz...</option>
+                                    ${assets.map(asset => `
+                                        <option value="${asset.id}" ${state.transactionForm.selectedAsset === asset.id ? 'selected' : ''}>
+                                            ${asset.id} - ${asset.name} (${asset.type}) - ₺${asset.currentPrice.toFixed(2)}
+                                        </option>
+                                    `).join('')}
+                                </select>
+                                ${selectedAsset ? `
+                                    <div class="mt-2 p-3 bg-blue-50 rounded-lg">
+                                        <p class="text-sm text-blue-900">Güncel Fiyat: <span class="font-semibold">₺${selectedAsset.currentPrice.toFixed(2)}</span></p>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Miktar (Adet) <span class="text-red-500">*</span></label>
+                                    <input type="number" id="amount" placeholder="Örn: 1000" min="1" step="1" value="${state.transactionForm.amount}" required
+                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Birim Fiyat (₺) <span class="text-red-500">*</span></label>
+                                    <input type="number" id="unitPrice" placeholder="Örn: 245.50" min="0.01" step="0.01" value="${state.transactionForm.unitPrice}" required
+                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none" />
+                                </div>
+                            </div>
+
+                            ${state.transactionForm.amount && state.transactionForm.unitPrice ? `
+                                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                                    <h4 class="font-bold text-gray-900 mb-4">İşlem Özeti</h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-600">Toplam Tutar:</span>
+                                            <span class="font-semibold text-gray-900">₺${formatCurrency(total.toFixed(2))}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-gray-600">Komisyon (%1):</span>
+                                            <span class="font-semibold text-gray-900">₺${formatCurrency(commission.toFixed(2))}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between pt-3 border-t border-gray-300">
+                                            <span class="font-bold text-gray-900">Net Tutar:</span>
+                                            <span class="font-bold text-gray-900">₺${formatCurrency((total + (state.transactionForm.transactionType === 'ALIS' ? commission : -commission)).toFixed(2))}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${selectedAccount && total > selectedAccount.balance && state.transactionForm.transactionType === 'ALIS' ? `
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
+                                    ${icons.alertCircle}
+                                    <div>
+                                        <p class="font-semibold text-yellow-900">Yetersiz Bakiye</p>
+                                        <p class="text-sm text-yellow-700">Hesap bakiyesi (₺${formatCurrency(selectedAccount.balance)}) işlem tutarından düşük.</p>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl">
+                                İşlemi Kaydet
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                        <div class="flex items-start gap-3">
+                            ${icons.alertCircle}
+                            <div>
+                                <h4 class="font-bold text-blue-900 mb-2">Önemli Bilgiler</h4>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• İşlem kaydedildikten sonra müşteriye otomatik bildirim gönderilir.</li>
+                                    <li>• Komisyon oranı varsayılan olarak %1 olarak hesaplanmaktadır.</li>
+                                    <li>• Satış işlemlerinde portföyde yeterli varlık olduğundan emin olun.</li>
+                                    <li>• Tüm işlemler sistem tarafından loglanır ve denetlenebilir.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBrokerInterface() {
+            const tabs = [
+                { id: 'performance', label: 'Genel Bakış / Performans', icon: icons.barChart3 },
+                { id: 'clients', label: 'Müşteri Yönetimi', icon: icons.users },
+                { id: 'transaction', label: 'Yeni İşlem Girişi', icon: icons.plus }
+            ];
+
+            return `
+                <div class="min-h-screen bg-gray-50">
+                    <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex items-center justify-between h-16">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+                                        ${icons.briefcase}
+                                    </div>
+                                    <div>
+                                        <h1 class="text-xl font-bold text-gray-900">Broker Paneli</h1>
+                                        <p class="text-sm text-gray-500">${state.currentUser.name} ${state.currentUser.surname}</p>
+                                    </div>
+                                </div>
+                                <button onclick="logout()" class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                                    ${icons.logOut}
+                                    <span>Çıkış</span>
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="bg-white border-b border-gray-200 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <nav class="flex gap-8 overflow-x-auto">
+                                ${tabs.map(tab => `
+                                    <button onclick="setTab('${tab.id}')" 
+                                        class="flex items-center gap-2 py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${state.currentTab === tab.id ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}">
+                                        ${tab.icon}
+                                        <span class="font-medium">${tab.label}</span>
+                                    </button>
+                                `).join('')}
+                            </nav>
+                        </div>
+                    </div>
+
+                    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        ${state.currentTab === 'performance' ? renderBrokerPerformanceTab() : ''}
+                        ${state.currentTab === 'clients' ? renderBrokerClientManagementTab() : ''}
+                        ${state.currentTab === 'transaction' ? renderBrokerNewTransactionTab() : ''}
+                    </main>
+                </div>
+            `;
+        }
+
+        function renderInvestorAccountsTab() {
+            const totalBalance = investorAccounts.reduce((sum, acc) => sum + acc.balance, 0);
+            const activeAccounts = investorAccounts.filter(acc => acc.status === 'active');
+
+            return `
+                ${state.showNewAccountModal ? `
+                    <div class="fixed inset-0 bg-black/50 modal-backdrop z-50 flex items-center justify-center p-4">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+                            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">${icons.plus}</div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white">Yeni Hesap Aç</h3>
+                                        <p class="text-blue-100 text-sm">Yeni yatırım hesabı oluşturun</p>
+                                    </div>
+                                </div>
+                                <button onclick="closeNewAccountModal()" class="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
+                                    ${icons.x}
+                                </button>
+                            </div>
+
+                            <form id="newAccountForm" class="p-6 space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Broker Seçimi <span class="text-red-500">*</span></label>
+                                    <select id="selectedBroker" required class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                        <option value="">Broker seçiniz...</option>
+                                        ${availableBrokers.map(broker => `
+                                            <option value="${broker.id}">
+                                                ${broker.name} - ${broker.email}
+                                            </option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Başlangıç Yatırımı (₺) <span class="text-red-500">*</span></label>
+                                    <input type="number" id="initialDeposit" placeholder="Örn: 100000" min="10000" step="1000" required
+                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" />
+                                    <p class="text-xs text-gray-500 mt-1">Minimum başlangıç yatırımı: ₺10.000</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Komisyon Planı <span class="text-red-500">*</span></label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <button type="button" onclick="setCommissionPlan('Standart Plan')" 
+                                            class="p-4 rounded-lg border-2 transition-all text-left ${state.newAccountForm.commissionPlan === 'Standart Plan' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'}">
+                                            <p class="font-semibold text-gray-900 mb-1">Standart Plan</p>
+                                            <p class="text-xs text-gray-600">%1 komisyon, Min: ₺50</p>
+                                        </button>
+                                        <button type="button" onclick="setCommissionPlan('Premium Plan')" 
+                                            class="p-4 rounded-lg border-2 transition-all text-left ${state.newAccountForm.commissionPlan === 'Premium Plan' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'}">
+                                            <p class="font-semibold text-gray-900 mb-1">Premium Plan</p>
+                                            <p class="text-xs text-gray-600">%0.8 komisyon, Min: ₺100</p>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex items-start gap-3">
+                                        ${icons.alertCircle}
+                                        <div>
+                                            <p class="text-sm text-blue-900 font-semibold mb-1">Önemli Bilgilendirme</p>
+                                            <ul class="text-xs text-blue-700 space-y-1">
+                                                <li>• Hesap açıldıktan sonra broker ataması değiştirilemez</li>
+                                                <li>• Komisyon planı sonradan değiştirilebilir</li>
+                                                <li>• Başlangıç yatırımı hesaba otomatik olarak yüklenecektir</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-3 pt-4 border-t border-gray-200">
+                                    <button type="button" onclick="closeNewAccountModal()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">İptal</button>
+                                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg font-medium">Hesap Aç</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+                        <p class="text-blue-100 mb-2">Toplam Yatırılabilir Varlık</p>
+                        <h2 class="text-4xl font-bold text-white mb-6">₺${formatCurrency(totalBalance)}</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                                <p class="text-blue-100 text-sm mb-1">Toplam Hesap Sayısı</p>
+                                <p class="text-white text-xl font-bold">${investorAccounts.length}</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                                <p class="text-blue-100 text-sm mb-1">Aktif Hesap</p>
+                                <p class="text-white text-xl font-bold">${activeAccounts.length}</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                                <p class="text-blue-100 text-sm mb-1">Risk Profili</p>
+                                <p class="text-white text-xl font-bold">${investorData.riskProfile.name}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">Hesaplarım</h3>
+                            <button onclick="openNewAccountModal()" class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                ${icons.plus}
+                                <span>Yeni Hesap Aç</span>
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            ${investorAccounts.map(acc => {
+                                const broker = availableBrokers.find(b => b.id === acc.brokerId);
+                                return `
+                                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                        <div class="flex items-start justify-between mb-6">
+                                            <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">${icons.creditCard}</div>
+                                                <div>
+                                                    <div class="flex items-center gap-3 mb-1">
+                                                        <h4 class="text-lg font-bold text-gray-900">Hesap No: ${acc.accountId}</h4>
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${acc.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                                            ${acc.status === 'active' ? 'Aktif' : 'Dondurulmuş'}
+                                                        </span>
+                                                    </div>
+                                                    <p class="text-sm text-gray-600">Yatırım Hesabı</p>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-sm text-gray-600 mb-1">Bakiye</p>
+                                                <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(acc.balance)}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    ${icons.calendar}
+                                                    <p class="text-sm text-gray-600">Açılış Tarihi</p>
+                                                </div>
+                                                <p class="font-semibold text-gray-900">${acc.openDate}</p>
+                                            </div>
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    ${icons.dollarSign}
+                                                    <p class="text-sm text-gray-600">Komisyon Planı</p>
+                                                </div>
+                                                <p class="font-semibold text-gray-900">${acc.commissionPlan.name}</p>
+                                                <p class="text-xs text-gray-500">Min: ₺${acc.commissionPlan.minCommission} - %${acc.commissionPlan.rate}</p>
+                                            </div>
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    ${icons.user}
+                                                    <p class="text-sm text-gray-600">Sorumlu Broker</p>
+                                                </div>
+                                                <p class="font-semibold text-gray-900">${broker ? broker.name : 'N/A'}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-4 border-t border-gray-200 flex gap-3">
+                                            <button onclick="toggleAccountStatus('${acc.accountId}')" class="flex items-center gap-2 px-4 py-2 ${acc.status === 'active' ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : 'bg-green-100 text-green-700 hover:bg-green-200'} rounded-lg transition-colors font-medium">
+                                                ${acc.status === 'active' ? icons.pauseCircle : icons.playCircle}
+                                                <span>${acc.status === 'active' ? 'Hesabı Dondur' : 'Hesabı Aktifleştir'}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center gap-2 mb-4">
+                            ${icons.shield}
+                            <h3 class="text-xl font-bold text-gray-900">Risk Profili</h3>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="inline-flex items-center px-4 py-2 rounded-full font-medium border ${getRiskColor(investorData.riskProfile.name)}">${investorData.riskProfile.name}</span>
+                                <div class="text-right">
+                                    <p class="text-sm text-gray-600">Maksimum Hisse Oranı</p>
+                                    <p class="text-xl font-bold text-gray-900">%${investorData.riskProfile.maxStockRatio}</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-700">${investorData.riskProfile.description}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInvestorTransactionHistoryTab() {
+            const filteredTransactions = transactions.filter(t => {
+                if (state.filterState.selectedAccount !== 'all' && t.accountId !== state.filterState.selectedAccount) return false;
+                if (state.filterState.selectedType !== 'all' && t.type !== state.filterState.selectedType) return false;
+                if (state.filterState.dateFrom && new Date(t.date) < new Date(state.filterState.dateFrom)) return false;
+                if (state.filterState.dateTo && new Date(t.date) > new Date(state.filterState.dateTo)) return false;
+                return true;
+            });
+
+            const totalBuy = filteredTransactions.filter(t => t.type === 'ALIS').reduce((sum, t) => sum + t.netTotal, 0);
+            const totalSell = filteredTransactions.filter(t => t.type === 'SATIS').reduce((sum, t) => sum + t.netTotal, 0);
+            const totalCommission = filteredTransactions.reduce((sum, t) => sum + t.commission, 0);
+
+            return `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">${icons.trendingUp}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Alış</p>
+                                    <p class="text-xl font-bold text-gray-900">₺${formatCurrency(totalBuy.toFixed(2))}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">${icons.trendingDown}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Satış</p>
+                                    <p class="text-xl font-bold text-gray-900">₺${formatCurrency(totalSell.toFixed(2))}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">${icons.calendar}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Komisyon</p>
+                                    <p class="text-xl font-bold text-gray-900">₺${formatCurrency(totalCommission.toFixed(2))}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                        <div class="flex items-center gap-2 mb-4">
+                            ${icons.filter}
+                            <h3 class="text-xl font-bold text-gray-900">Filtrele</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hesap</label>
+                                <select id="filterAccount" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                    <option value="all">Tüm Hesaplar</option>
+                                    ${investorAccounts.map(acc => `<option value="${acc.accountId}">${acc.accountId}</option>`).join('')}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">İşlem Tipi</label>
+                                <select id="filterType" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                    <option value="all">Tümü</option>
+                                    <option value="ALIS">Alış</option>
+                                    <option value="SATIS">Satış</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Başlangıç</label>
+                                <input type="date" id="filterDateFrom" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" />
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bitiş</label>
+                                <input type="date" id="filterDateTo" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-gray-900">İşlem Geçmişi (${filteredTransactions.length} kayıt)</h3>
+                            <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                                ${icons.download}
+                                <span>Dışa Aktar</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600">Tarih & Saat</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600">Varlık</th>
+                                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600">İşlem</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Miktar</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Birim Fiyat</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Tutar</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Komisyon</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Net Tutar</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    ${filteredTransactions.map(t => `
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">${new Date(t.date).toLocaleString('tr-TR')}</td>
+                                            <td class="px-6 py-4">
+                                                <p class="text-sm font-medium text-gray-900">${t.asset}</p>
+                                                <p class="text-xs text-gray-500">${t.assetName}</p>
+                                            </td>
+                                            <td class="px-6 py-4 text-center">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${t.type === 'ALIS' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">${formatCurrency(t.amount)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${t.unitPrice.toFixed(2)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${formatCurrency(t.total.toFixed(2))}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-600">₺${formatCurrency(t.commission.toFixed(2))}</td>
+                                            <td class="px-6 py-4 text-right text-sm font-semibold text-gray-900">₺${formatCurrency(t.netTotal.toFixed(2))}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        ${filteredTransactions.length === 0 ? `
+                            <div class="p-12 text-center">
+                                ${icons.calendar}
+                                <p class="text-gray-600 mt-3">İşlem kaydı bulunamadı</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInvestorPortfolioTab() {
+            const totalCost = portfolioPositions.reduce((sum, p) => sum + p.totalCost, 0);
+            const totalCurrentValue = portfolioPositions.reduce((sum, p) => sum + p.currentValue, 0);
+            const totalProfitLoss = totalCurrentValue - totalCost;
+            const totalProfitLossPercent = (totalProfitLoss / totalCost) * 100;
+
+            return `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">${icons.package}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Pozisyon Sayısı</p>
+                                    <p class="text-2xl font-bold text-gray-900">${portfolioPositions.length}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">${icons.dollarSign}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Toplam Maliyet</p>
+                                    <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(totalCost)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">${icons.pieChart}</div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Güncel Değer</p>
+                                    <p class="text-2xl font-bold text-gray-900">₺${formatCurrency(totalCurrentValue)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 ${totalProfitLoss >= 0 ? 'bg-green-100' : 'bg-red-100'} rounded-lg flex items-center justify-center">
+                                    <div class="${totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">${icons.trendingUp}</div>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Kar/Zarar</p>
+                                    <p class="text-2xl font-bold ${totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">
+                                        ${totalProfitLoss >= 0 ? '+' : ''}₺${formatCurrency(totalProfitLoss)}
+                                    </p>
+                                    <p class="text-xs ${totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">
+                                        ${totalProfitLoss >= 0 ? '+' : ''}%${totalProfitLossPercent.toFixed(2)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-xl font-bold text-gray-900">Portföy Pozisyonları</h3>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600">Varlık</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Miktar</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Ort. Maliyet</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Toplam Maliyet</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Güncel Fiyat</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Güncel Değer</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">Kar/Zarar</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-600">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    ${portfolioPositions.map(p => `
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <td class="px-6 py-4">
+                                                <p class="text-sm font-medium text-gray-900">${p.assetId}</p>
+                                                <p class="text-xs text-gray-500">${p.assetName}</p>
+                                            </td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">${formatCurrency(p.currentAmount)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${p.avgBuyPrice.toFixed(2)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${formatCurrency(p.totalCost)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${p.currentPrice.toFixed(2)}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">₺${formatCurrency(p.currentValue)}</td>
+                                            <td class="px-6 py-4 text-right text-sm font-semibold ${p.profitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">
+                                                ${p.profitLoss >= 0 ? '+' : ''}₺${formatCurrency(p.profitLoss)}
+                                            </td>
+                                            <td class="px-6 py-4 text-right text-sm font-semibold ${p.profitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">
+                                                ${p.profitLoss >= 0 ? '+' : ''}%${p.profitLossPercent.toFixed(2)}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                                <tfoot class="bg-gray-50 border-t-2 border-gray-300">
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm font-bold text-gray-900">Toplam</td>
+                                        <td class="px-6 py-4"></td>
+                                        <td class="px-6 py-4"></td>
+                                        <td class="px-6 py-4 text-right text-sm font-bold text-gray-900">₺${formatCurrency(totalCost)}</td>
+                                        <td class="px-6 py-4"></td>
+                                        <td class="px-6 py-4 text-right text-sm font-bold text-gray-900">₺${formatCurrency(totalCurrentValue)}</td>
+                                        <td class="px-6 py-4 text-right text-sm font-bold ${totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">
+                                            ${totalProfitLoss >= 0 ? '+' : ''}₺${formatCurrency(totalProfitLoss)}
+                                        </td>
+                                        <td class="px-6 py-4 text-right text-sm font-bold ${totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}">
+                                            ${totalProfitLoss >= 0 ? '+' : ''}%${totalProfitLossPercent.toFixed(2)}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Portföy Dağılımı</h3>
+                        <div class="space-y-4">
+                            ${portfolioPositions.map(p => {
+                                const percentage = (p.currentValue / totalCurrentValue) * 100;
+                                return `
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-sm font-semibold text-gray-900">${p.assetId}</span>
+                                                <span class="text-xs text-gray-500">${p.assetName}</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-sm font-semibold text-gray-900">%${percentage.toFixed(2)}</span>
+                                                <span class="text-xs text-gray-500 ml-2">₺${formatCurrency(p.currentValue)}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all" style="width: ${percentage}%"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInvestorInterface() {
+            const tabs = [
+                { id: 'accounts', label: 'Hesaplarım ve Bakiye', icon: icons.wallet },
+                { id: 'history', label: 'İşlem Geçmişi', icon: icons.receipt },
+                { id: 'portfolio', label: 'Portföy Durumu', icon: icons.pieChart }
+            ];
+
+            return `
+                <div class="min-h-screen bg-gray-50">
+                    <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="flex items-center justify-between h-16">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                                        ${icons.wallet}
+                                    </div>
+                                    <div>
+                                        <h1 class="text-xl font-bold text-gray-900">Yatırımcı Paneli</h1>
+                                        <p class="text-sm text-gray-500">${state.currentUser.name} ${state.currentUser.surname}</p>
+                                    </div>
+                                </div>
+                                <button onclick="logout()" class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                                    ${icons.logOut}
+                                    <span>Çıkış</span>
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="bg-white border-b border-gray-200 shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <nav class="flex gap-8 overflow-x-auto">
+                                ${tabs.map(tab => `
+                                    <button onclick="setTab('${tab.id}')" 
+                                        class="flex items-center gap-2 py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${state.currentTab === tab.id ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}">
+                                        ${tab.icon}
+                                        <span class="font-medium">${tab.label}</span>
+                                    </button>
+                                `).join('')}
+                            </nav>
+                        </div>
+                    </div>
+
+                    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        ${state.currentTab === 'accounts' ? renderInvestorAccountsTab() : ''}
+                        ${state.currentTab === 'history' ? renderInvestorTransactionHistoryTab() : ''}
+                        ${state.currentTab === 'portfolio' ? renderInvestorPortfolioTab() : ''}
+                    </main>
+                </div>
+            `;
+        }
+
+        // Event Handlers
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const userType = document.getElementById('userType').value;
+
+            const mockUser = mockUsers[userType];
+            
+            if (username === mockUser.username && password === mockUser.password) {
+                state.currentUser = mockUser.data;
+                state.currentScreen = mockUser.data.role;
+                state.currentTab = mockUser.data.role === 'broker' ? 'performance' : 'accounts';
+                render();
+            } else {
+                alert('Kullanıcı adı veya şifre hatalı!');
+            }
+        }
+
+        function logout() {
+            state.currentUser = null;
+            state.currentScreen = 'login';
+            state.currentTab = null;
+            render();
+        }
+
+        function setTab(tab) {
+            state.currentTab = tab;
+            render();
+        }
+
+        function setPeriod(period) {
+            state.selectedPeriod = period;
+            render();
+        }
+
+        function handleExportReport() {
+            alert('Performans raporu indiriliyor...');
+        }
+
+        function updateSearchQuery(query) {
+            state.searchQuery = query;
+            render();
+        }
+
+        function toggleClient(clientId) {
+            state.selectedClient = state.selectedClient === clientId ? null : clientId;
+            render();
+        }
+
+        function openDetailModal(clientId) {
+            state.detailModalClient = clientId;
+            render();
+        }
+
+        function closeDetailModal() {
+            state.detailModalClient = null;
+            render();
+        }
+
+        function setTransactionType(type) {
+            state.transactionForm.transactionType = type;
+            render();
+        }
+
+        function handleTransactionFormChange() {
+            state.transactionForm.selectedAccount = document.getElementById('selectedAccount').value;
+            state.transactionForm.selectedAsset = document.getElementById('selectedAsset').value;
+            state.transactionForm.amount = document.getElementById('amount').value;
+            state.transactionForm.unitPrice = document.getElementById('unitPrice').value;
+
+            // Auto-fill price when asset is selected
+            if (state.transactionForm.selectedAsset && !state.transactionForm.unitPrice) {
+                const asset = assets.find(a => a.id === state.transactionForm.selectedAsset);
+                if (asset) {
+                    state.transactionForm.unitPrice = asset.currentPrice.toString();
+                }
+            }
+
+            render();
+        }
+
+        function handleTransactionSubmit(e) {
+            e.preventDefault();
+
+            if (!state.transactionForm.selectedAccount || !state.transactionForm.selectedAsset || 
+                !state.transactionForm.amount || !state.transactionForm.unitPrice) {
+                alert('Lütfen tüm alanları doldurun!');
+                return;
+            }
+
+            console.log('Yeni İşlem:', state.transactionForm);
+            
+            state.showSuccess = true;
+            setTimeout(() => {
+                state.showSuccess = false;
+                state.transactionForm = {
+                    selectedAccount: '',
+                    selectedAsset: '',
+                    transactionType: 'ALIS',
+                    amount: '',
+                    unitPrice: ''
+                };
+                render();
+            }, 2000);
+            render();
+        }
+
+        function handleFilterChange() {
+            state.filterState.selectedAccount = document.getElementById('filterAccount').value;
+            state.filterState.selectedType = document.getElementById('filterType').value;
+            state.filterState.dateFrom = document.getElementById('filterDateFrom').value;
+            state.filterState.dateTo = document.getElementById('filterDateTo').value;
+            render();
+        }
+
+        // New Account Functions
+        function openNewAccountModal() {
+            state.showNewAccountModal = true;
+            render();
+        }
+
+        function closeNewAccountModal() {
+            state.showNewAccountModal = false;
+            state.newAccountForm = {
+                selectedBroker: '',
+                initialDeposit: '',
+                commissionPlan: 'Standart Plan'
+            };
+            render();
+        }
+
+        function setCommissionPlan(plan) {
+            state.newAccountForm.commissionPlan = plan;
+            render();
+        }
+
+        function handleNewAccountSubmit(e) {
+            e.preventDefault();
+            
+            const brokerId = document.getElementById('selectedBroker').value;
+            const initialDeposit = parseFloat(document.getElementById('initialDeposit').value);
+
+            if (!brokerId || !initialDeposit) {
+                alert('Lütfen tüm alanları doldurun!');
+                return;
+            }
+
+            if (initialDeposit < 10000) {
+                alert('Minimum başlangıç yatırımı ₺10.000 olmalıdır!');
+                return;
+            }
+
+            // Generate new account
+            const newAccountId = `HSP-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+            const newAccount = {
+                accountId: newAccountId,
+                balance: initialDeposit,
+                openDate: new Date().toISOString().split('T')[0],
+                status: 'active',
+                commissionPlan: state.newAccountForm.commissionPlan === 'Standart Plan' 
+                    ? { name: 'Standart Plan', minCommission: 50, rate: 1.0 }
+                    : { name: 'Premium Plan', minCommission: 100, rate: 0.8 },
+                brokerId: parseInt(brokerId)
+            };
+
+            investorAccounts.push(newAccount);
+            
+            alert('Yeni hesap başarıyla oluşturuldu!\nHesap No: ' + newAccountId);
+            closeNewAccountModal();
+        }
+
+        function toggleAccountStatus(accountId) {
+            const account = investorAccounts.find(acc => acc.accountId === accountId);
+            if (account) {
+                account.status = account.status === 'active' ? 'frozen' : 'active';
+                alert(`Hesap ${account.status === 'active' ? 'aktifleştirildi' : 'donduruldu'}!`);
+                render();
+            }
+        }
+
+        // Main Render Function
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (state.currentScreen === 'login') {
+                app.innerHTML = renderLoginScreen();
+                document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            } else if (state.currentScreen === 'broker') {
+                app.innerHTML = renderBrokerInterface();
+                
+                // Add event listeners for broker forms
+                const transactionForm = document.getElementById('transactionForm');
+                if (transactionForm) {
+                    transactionForm.addEventListener('submit', handleTransactionSubmit);
+                    document.getElementById('selectedAccount').addEventListener('change', handleTransactionFormChange);
+                    document.getElementById('selectedAsset').addEventListener('change', handleTransactionFormChange);
+                    document.getElementById('amount').addEventListener('input', handleTransactionFormChange);
+                    document.getElementById('unitPrice').addEventListener('input', handleTransactionFormChange);
+                }
+            } else if (state.currentScreen === 'investor') {
+                app.innerHTML = renderInvestorInterface();
+                
+                // Add event listeners for investor filters
+                const filterAccount = document.getElementById('filterAccount');
+                if (filterAccount) {
+                    filterAccount.addEventListener('change', handleFilterChange);
+                    document.getElementById('filterType').addEventListener('change', handleFilterChange);
+                    document.getElementById('filterDateFrom').addEventListener('change', handleFilterChange);
+                    document.getElementById('filterDateTo').addEventListener('change', handleFilterChange);
+                }
+
+                // Add event listeners for new account form
+                const newAccountForm = document.getElementById('newAccountForm');
+                if (newAccountForm) {
+                    newAccountForm.addEventListener('submit', handleNewAccountSubmit);
+                }
+            }
+        }
+
+        // Initial Render
+        render();
+    </script>
+</body>
+</html>

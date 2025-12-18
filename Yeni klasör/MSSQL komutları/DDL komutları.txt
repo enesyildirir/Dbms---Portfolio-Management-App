@@ -1,0 +1,101 @@
+-- 1. Pozisyonlar Tablosu
+CREATE TABLE PozisyonlarTablosu (
+    PozisyonID INT PRIMARY KEY IDENTITY(1,1),
+    Pozisyon NVARCHAR(100),
+    Departman NVARCHAR(100)
+);
+
+-- 2. Varlıklar Tablosu
+CREATE TABLE VarliklarTablosu (
+    VarlikID INT PRIMARY KEY IDENTITY(1,1),
+    VarlikAdi NVARCHAR(100),
+    VarlikTuru NVARCHAR(50),
+    Piyasa NVARCHAR(50)
+);
+
+-- 3. Risk Profil Tablosu
+CREATE TABLE RiskProfilTablosu (
+    RiskProfilID INT PRIMARY KEY IDENTITY(1,1),
+    ProfilAdi NVARCHAR(50),
+    Aciklama NVARCHAR(255),
+    MaksIslemOrani DECIMAL(5, 2) -- Örn: 99.99 oranı için
+);
+
+-- 4. Yatırımcılar Tablosu
+CREATE TABLE YatirimcilarTablosu (
+    YatirimciID INT PRIMARY KEY IDENTITY(1,1),
+    Ad NVARCHAR(50),
+    Soyad NVARCHAR(50),
+    Tel NVARCHAR(20),
+    TC_no CHAR(11),
+    Eposta NVARCHAR(100),
+    SifreHash NVARCHAR(255),
+    Bakiye DECIMAL(18, 2)
+);
+
+
+
+
+////////////////////////Kodları belirtilen sırayla yapıştırıp çalıştırın//////////////////////
+-- 5. Çalışanlar Tablosu (PozisyonlarTablosu'na bağlı)
+CREATE TABLE CalisanlarTablosu (
+    CalisanID INT PRIMARY KEY IDENTITY(1,1),
+    Ad NVARCHAR(50),
+    Soyad NVARCHAR(50),
+    Tel NVARCHAR(20),
+    TC_no CHAR(11),
+    Eposta NVARCHAR(100),
+    IseGirisTarihi DATETIME,
+    SifreHash NVARCHAR(255),
+    Durum BIT, -- Aktif/Pasif durumu için
+    PozisyonID INT,
+    CONSTRAINT FK_Calisan_Pozisyon FOREIGN KEY (PozisyonID) REFERENCES PozisyonlarTablosu(PozisyonID)
+);
+
+-- 6. Komisyonlar Tablosu (Varlık ve Çalışan tablolarına bağlı)
+CREATE TABLE KomisyonlarTablosu (
+    KomisyonID INT PRIMARY KEY IDENTITY(1,1),
+    MinimumKomisyon DECIMAL(18, 2),
+    VarlikID INT,
+    CalisanID INT,
+    CONSTRAINT FK_Komisyon_Varlik FOREIGN KEY (VarlikID) REFERENCES VarliklarTablosu(VarlikID),
+    CONSTRAINT FK_Komisyon_Calisan FOREIGN KEY (CalisanID) REFERENCES CalisanlarTablosu(CalisanID)
+);
+
+/////////////////////////////////////////////////////////////////
+
+-- 7. Hesaplar Tablosu (Yatırımcı, Varlık, Komisyon, Çalışan, Risk tablolarına bağlı)
+CREATE TABLE HesaplarTablosu (
+    HesapNo INT PRIMARY KEY IDENTITY(1,1), -- HesapNo genellikle int veya string olabilir, diyagramda anahtar görünüyor
+    HesapAcilisTarihi DATETIME,
+    Bakiye DECIMAL(18, 2),
+    HesapDurumu NVARCHAR(20),
+    VarlikID INT,
+    KomisyonID INT,
+    YatirimciID INT,
+    CalisanID INT,
+    RiskProfilID INT,
+    CONSTRAINT FK_Hesap_Varlik FOREIGN KEY (VarlikID) REFERENCES VarliklarTablosu(VarlikID),
+    CONSTRAINT FK_Hesap_Komisyon FOREIGN KEY (KomisyonID) REFERENCES KomisyonlarTablosu(KomisyonID),
+    CONSTRAINT FK_Hesap_Yatirimci FOREIGN KEY (YatirimciID) REFERENCES YatirimcilarTablosu(YatirimciID),
+    CONSTRAINT FK_Hesap_Calisan FOREIGN KEY (CalisanID) REFERENCES CalisanlarTablosu(CalisanID),
+    CONSTRAINT FK_Hesap_Risk FOREIGN KEY (RiskProfilID) REFERENCES RiskProfilTablosu(RiskProfilID)
+);
+
+-- 8. İşlemler Tablosu (En çok bağlantıya sahip işlem tablosu)
+CREATE TABLE IslemlerTablosu (
+    IslemID INT PRIMARY KEY IDENTITY(1,1),
+    IslemTipi NVARCHAR(20), -- Alış/Satış vb.
+    IslemTarihi DATETIME,
+    Miktar DECIMAL(18, 4), -- Hisse adedi küsuratlı olabilir
+    BirimFiyat DECIMAL(18, 2),
+    KomisyonMiktar DECIMAL(18, 2),
+    ToplamTutar DECIMAL(18, 2),
+    KarZarar DECIMAL(18, 2),
+    CalisanID INT,
+    HesapNo INT,
+    VarlikID INT,
+    CONSTRAINT FK_Islem_Calisan FOREIGN KEY (CalisanID) REFERENCES CalisanlarTablosu(CalisanID),
+    CONSTRAINT FK_Islem_Hesap FOREIGN KEY (HesapNo) REFERENCES HesaplarTablosu(HesapNo),
+    CONSTRAINT FK_Islem_Varlik FOREIGN KEY (VarlikID) REFERENCES VarliklarTablosu(VarlikID)
+);
